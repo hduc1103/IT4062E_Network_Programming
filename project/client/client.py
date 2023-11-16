@@ -15,16 +15,21 @@ def main():
             return
 
         while True:
-            choice = input("Do you want to login or register? ").lower()
-            while(choice!="exit"):
-                client_socket.sendall(choice.encode())  
+            choice = input("Do you want to login, register, or search flights? ").lower()
 
-                if choice not in ["login", "register"]:
-                    print("Invalid choice. Please enter 'login' or 'register'.")
-                    continue
+            if choice == 'exit':
+                break
 
-                if choice == 'exit':
-                    break
+            client_socket.sendall(choice.encode())  
+
+            if choice not in ["login", "register", "search"]:
+                print("Invalid choice. Please enter 'login', 'register', or 'search'.")
+                continue
+
+            if choice == 'search':
+                response = client_socket.recv(MAXLINE).decode('utf-8')
+                print(response)
+            else:
                 username = input("Enter username: ")
                 password = input("Enter password: ")
 
@@ -34,6 +39,7 @@ def main():
                 response = client_socket.recv(MAXLINE).decode('utf-8')
                 print(response)
 
-            print("Closing the connection.")
+        print("Closing the connection.")
+
 if __name__ == "__main__":
     main()

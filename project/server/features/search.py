@@ -1,5 +1,5 @@
 from typing import List
-from server.model.flight import flight
+from model.flight import flight
 
 def search_flights(flight_list: List[flight], criteria: dict):
     result_flights = []
