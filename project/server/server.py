@@ -63,7 +63,5 @@ def main():
         print(f"Connection closed by {client_addr[0]}:{client_addr[1]}")
         client_socket.close()
         server_socket.close()
-
-
 if __name__ == "__main__":
     main()
