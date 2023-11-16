@@ -37,7 +37,7 @@ def main():
 
     search_criteria = {
         'company' : "VietNamAirline",
-        'departure_points': 'DaNang',
+        'departure_points': 'NhaTrang',
         'seat_class': 'C'
     }
 

@@ -35,6 +35,5 @@ def main():
                 print(response)
 
             print("Closing the connection.")
-
 if __name__ == "__main__":
     main()
