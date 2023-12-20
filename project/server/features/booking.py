@@ -1,4 +1,3 @@
-#not finnished
 from model import flight
 
 class booking:

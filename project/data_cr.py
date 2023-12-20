@@ -12,6 +12,7 @@ def data():
     departure_points = ["HaNoi", "HoChiMinh", "DaNang", "NhaTrang", "PhuQuoc"]
     destination_points = ["QuangNing", "ThanhHoa", "Hue", "Sapa", "ConDao", "NhaTrang", "SaiGon", "HaNoi", "CaoBang", "CaMau", "TruongSa", "NgheAn"]
     seat_classes = ["A", "B", "C", "D"]
+
     flight_data = []
 
     for _ in range(100):
