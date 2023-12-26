@@ -1,100 +1,100 @@
-Bamboo Airways,TIYPA4,260,HoChiMinh,NhaTrang,24/12/2022,25/09/2023,D
-Jetstar Pacific,VGNWUC,317,HaNoi,ThanhHoa,26/12/2022,11/07/2024,C
-Bamboo Airways,1HQCA9,181,PhuQuoc,CaoBang,17/01/2023,11/10/2024,D
-Bamboo Airways,LTDTWN,424,NhaTrang,CaMau,02/10/2023,07/03/2022,A
-Bamboo Airways,IW9AHH,145,NhaTrang,HaNoi,05/03/2024,16/04/2022,A
-VietJet Air,D0XBJA,343,HoChiMinh,Sapa,20/12/2022,30/12/2022,C
-VietNamAirline,0MYQW5,263,HoChiMinh,SaiGon,26/09/2023,07/12/2022,B
-VietNamAirline,43SZJV,168,NhaTrang,ConDao,09/12/2024,20/10/2024,B
-VietNamAirline,QV1SQK,269,DaNang,Sapa,04/02/2023,27/10/2024,B
-Jetstar Pacific,EVU4H5,449,HoChiMinh,Hue,31/05/2022,18/01/2024,C
-Jetstar Pacific,HFCGEA,325,NhaTrang,SaiGon,28/12/2024,24/10/2022,D
-Jetstar Pacific,N8KJVQ,170,NhaTrang,CaoBang,27/10/2023,23/10/2024,A
-Jetstar Pacific,19N4EL,385,PhuQuoc,CaoBang,04/02/2022,14/06/2023,A
-Jetstar Pacific,3RJV41,226,HaNoi,QuangNing,05/08/2024,04/07/2022,A
-VietNamAirline,X5Q87S,132,PhuQuoc,Sapa,14/03/2023,06/04/2023,C
-VietNamAirline,OUVPBH,132,NhaTrang,Hue,14/07/2023,24/07/2022,D
-VietNamAirline,YZLR5Q,457,HaNoi,HaNoi,05/02/2024,09/09/2024,D
-Jetstar Pacific,HEXLTR,390,NhaTrang,CaoBang,14/07/2023,02/01/2024,B
-Bamboo Airways,OBR96P,365,HoChiMinh,Sapa,01/11/2023,06/08/2022,B
-Jetstar Pacific,OUS8RR,375,PhuQuoc,ThanhHoa,10/12/2023,10/12/2024,B
-Jetstar Pacific,X6LT57,127,PhuQuoc,NhaTrang,13/05/2024,03/06/2024,D
-Jetstar Pacific,G1C7P2,129,HoChiMinh,TruongSa,27/02/2024,15/01/2024,A
-Jetstar Pacific,GKBF4F,119,NhaTrang,SaiGon,22/12/2022,28/10/2022,C
-Bamboo Airways,2W7LG3,341,HoChiMinh,Hue,03/04/2023,04/11/2024,C
-Bamboo Airways,5P43E5,149,DaNang,QuangNing,08/08/2024,08/04/2022,A
-Bamboo Airways,97YRKC,360,PhuQuoc,Sapa,02/09/2024,12/03/2023,C
-Jetstar Pacific,B56TXL,278,PhuQuoc,Sapa,13/01/2024,19/05/2023,A
-Bamboo Airways,4HSF8B,376,DaNang,NhaTrang,04/09/2023,16/11/2022,A
-VietNamAirline,HZO9WJ,432,HoChiMinh,Hue,16/06/2024,31/01/2024,B
-Bamboo Airways,4MHOV2,341,HoChiMinh,NhaTrang,30/05/2024,03/05/2022,B
-VietNamAirline,W5EHW4,168,PhuQuoc,QuangNing,22/11/2024,10/12/2022,C
-Jetstar Pacific,KGLKKA,459,HaNoi,SaiGon,03/10/2022,15/09/2023,C
-Jetstar Pacific,U870GH,107,HaNoi,ConDao,18/03/2024,18/08/2023,D
-VietJet Air,SEHJC0,301,HoChiMinh,ThanhHoa,29/04/2023,13/12/2024,C
-Jetstar Pacific,ZSJ5EF,226,DaNang,NhaTrang,05/10/2022,23/08/2023,B
-VietNamAirline,FT2KCM,436,HoChiMinh,Sapa,06/09/2023,25/06/2024,A
-Bamboo Airways,4O12T1,193,HoChiMinh,Hue,26/06/2023,01/07/2023,D
-VietNamAirline,SUY772,432,PhuQuoc,Hue,11/03/2022,31/08/2022,D
-VietJet Air,KZAJ2Q,332,HaNoi,Sapa,28/08/2023,04/11/2024,A
-VietJet Air,IKRXPK,115,HoChiMinh,SaiGon,09/05/2023,05/03/2024,D
-VietJet Air,LEC9XG,493,HoChiMinh,NhaTrang,16/08/2022,12/04/2022,B
-Jetstar Pacific,W7TJ6D,163,DaNang,ThanhHoa,31/01/2022,06/02/2023,B
-Bamboo Airways,KICT6P,166,DaNang,TruongSa,01/10/2023,10/06/2023,B
-Bamboo Airways,HYMG50,211,HoChiMinh,ThanhHoa,11/10/2022,01/08/2023,D
-Jetstar Pacific,88W9T9,140,PhuQuoc,ThanhHoa,08/06/2022,28/07/2024,A
-VietNamAirline,8C6OX1,375,HoChiMinh,TruongSa,16/04/2023,12/09/2023,D
-VietNamAirline,B3ZYK6,325,PhuQuoc,Hue,03/12/2022,25/01/2023,D
-VietJet Air,X8O7UW,257,HoChiMinh,Hue,31/03/2024,02/06/2024,D
-VietNamAirline,YWDYQP,395,DaNang,CaoBang,07/06/2022,24/10/2022,A
-VietJet Air,ZN90LD,278,HaNoi,CaMau,15/11/2023,13/05/2024,A
-VietNamAirline,6RIHAQ,420,NhaTrang,QuangNing,22/02/2023,02/06/2024,D
-Bamboo Airways,WC6X8I,404,PhuQuoc,CaMau,25/09/2023,15/07/2022,B
-Bamboo Airways,5GVAGW,484,PhuQuoc,NgheAn,29/01/2023,27/08/2022,C
-VietNamAirline,33SVWZ,315,HaNoi,ConDao,22/11/2022,22/08/2024,B
-VietJet Air,41E55Y,418,DaNang,HaNoi,31/05/2022,06/05/2023,C
-VietJet Air,R5P18R,189,DaNang,Hue,30/09/2023,15/07/2022,B
-VietJet Air,0CGF63,376,HaNoi,NhaTrang,13/08/2023,14/11/2024,D
-Jetstar Pacific,DHY7MR,403,HoChiMinh,NhaTrang,24/07/2022,12/06/2022,B
-VietNamAirline,T1AVRX,470,HaNoi,ConDao,21/12/2023,05/10/2023,C
-Jetstar Pacific,VFGUNC,428,HoChiMinh,CaoBang,18/01/2023,04/10/2024,C
-Bamboo Airways,ISM3KC,133,DaNang,TruongSa,27/04/2024,12/05/2022,C
-VietJet Air,DJ6Y38,322,HoChiMinh,ConDao,25/12/2023,27/06/2024,C
-VietNamAirline,4IV3I3,123,NhaTrang,ConDao,07/09/2022,28/12/2024,D
-VietNamAirline,A8CPE2,388,HaNoi,CaoBang,28/03/2023,11/01/2022,D
-Bamboo Airways,DRYDB3,257,NhaTrang,Hue,28/07/2023,15/08/2022,A
-Jetstar Pacific,GXUPJ6,330,NhaTrang,TruongSa,06/05/2023,07/04/2023,C
-VietJet Air,WLVM62,466,DaNang,Sapa,08/11/2024,03/04/2023,D
-Jetstar Pacific,25O75Y,381,DaNang,TruongSa,05/08/2022,04/01/2024,D
-VietNamAirline,RD7IPB,266,DaNang,ThanhHoa,24/09/2022,04/09/2023,D
-Bamboo Airways,M5Z0VM,426,PhuQuoc,ConDao,19/08/2024,16/03/2024,A
-Jetstar Pacific,OBRKS0,379,HaNoi,Sapa,07/05/2024,18/12/2022,D
-VietNamAirline,YIYO96,190,PhuQuoc,Sapa,04/12/2023,25/05/2022,C
-Jetstar Pacific,RL7IOD,225,NhaTrang,TruongSa,05/09/2024,04/04/2023,A
-VietNamAirline,447V8M,349,PhuQuoc,ThanhHoa,27/04/2023,28/07/2023,B
-VietJet Air,X0VRHG,390,HaNoi,CaoBang,23/01/2022,22/01/2023,D
-VietJet Air,EA332K,183,HaNoi,Sapa,04/02/2022,02/02/2024,C
-Jetstar Pacific,HR41NG,485,DaNang,NgheAn,13/09/2024,02/12/2023,A
-VietNamAirline,RVW0K8,268,NhaTrang,ThanhHoa,18/09/2022,23/03/2023,C
-Jetstar Pacific,L2LMJ2,392,NhaTrang,NhaTrang,13/12/2022,19/05/2023,B
-Bamboo Airways,PHY6I8,445,HoChiMinh,ConDao,02/01/2023,14/03/2022,A
-Jetstar Pacific,UXO88N,365,HaNoi,Hue,21/01/2023,08/04/2023,C
-VietNamAirline,AB22FL,386,HaNoi,ConDao,25/08/2023,02/08/2022,D
-Bamboo Airways,VIROWC,393,NhaTrang,CaMau,18/11/2023,23/07/2024,C
-Bamboo Airways,E41B3N,480,PhuQuoc,Sapa,07/08/2022,21/08/2024,A
-VietJet Air,3PPM43,453,HaNoi,ThanhHoa,11/03/2023,12/05/2022,D
-Jetstar Pacific,Q6PGXZ,441,NhaTrang,HaNoi,29/05/2023,11/10/2024,A
-Bamboo Airways,GH7A12,321,HaNoi,CaMau,05/02/2023,21/01/2023,D
-VietNamAirline,U8YXBU,374,HoChiMinh,QuangNing,23/11/2023,13/02/2024,C
-VietNamAirline,ABOW4P,309,DaNang,HaNoi,26/07/2023,07/02/2024,B
-VietJet Air,E632G6,166,PhuQuoc,TruongSa,02/03/2023,25/11/2022,C
-VietJet Air,PXUKYV,491,HoChiMinh,QuangNing,11/11/2022,14/06/2024,D
-VietJet Air,G52E2N,458,NhaTrang,Sapa,28/02/2023,29/05/2024,A
-VietNamAirline,SZPQLY,437,HoChiMinh,CaoBang,29/03/2023,20/09/2022,A
-VietJet Air,KLSHRM,166,HoChiMinh,SaiGon,05/02/2024,21/11/2023,B
-VietNamAirline,VT6HBY,307,DaNang,Sapa,26/11/2022,30/08/2022,C
-Bamboo Airways,6IVZR1,298,NhaTrang,Hue,12/03/2024,02/01/2022,C
-VietNamAirline,NGXEP4,215,DaNang,CaMau,23/01/2022,21/09/2024,A
-Jetstar Pacific,P0KUEO,331,HoChiMinh,CaoBang,05/06/2024,19/05/2024,B
-Jetstar Pacific,67JFH5,426,HoChiMinh,SaiGon,08/10/2022,01/11/2023,A
-VietNamAirline,570C8X,328,PhuQuoc,Sapa,16/07/2022,25/03/2022,A
+Bamboo Airways,XLK753,259,Vinh,CaMau,15/11/2024,15/04/2023,D
+Jetstar Pacific,UWP0DF,305,CanTho,VungTau,13/12/2024,22/11/2024,D
+Bamboo Airways,4DE76N,368,HaiPhong,ConDao,31/10/2024,09/11/2023,D
+Bamboo Airways,Y19QT0,152,DaNang,VungTau,12/04/2023,01/06/2023,D
+VietJet Air,RHWLLF,185,NhaTrang,Sapa,25/11/2024,15/07/2024,B
+Bamboo Airways,G985GA,225,NhaTrang,DaLat,24/07/2023,25/12/2024,A
+VietNamAirline,5SCQO8,302,BuonMaThuot,TruongSa,04/10/2023,07/03/2024,A
+Jetstar Pacific,DYH5DO,116,HoChiMinh,HaNoi,16/05/2023,20/06/2023,C
+Jetstar Pacific,8AYNZ3,315,HaNoi,CaoBang,06/06/2023,04/08/2023,B
+Jetstar Pacific,PYI53U,108,HoChiMinh,Sapa,08/08/2024,28/08/2023,C
+VietJet Air,0A9BIV,367,HaNoi,NgheAn,18/10/2024,08/07/2023,A
+VietNamAirline,K6WFGA,251,HaiPhong,VungTau,16/06/2023,26/02/2023,B
+VietJet Air,Y83NGG,227,BuonMaThuot,NhaTrang,30/10/2023,01/11/2024,D
+VietNamAirline,FZAOGJ,207,Vinh,CaMau,28/08/2024,07/12/2024,A
+VietNamAirline,U6U5CR,150,HaNoi,CaoBang,15/05/2023,29/12/2024,C
+VietJet Air,MMK5CA,399,CanTho,Sapa,17/12/2023,31/07/2023,A
+VietNamAirline,4EDDHM,342,BuonMaThuot,DaLat,25/03/2024,11/06/2024,A
+VietJet Air,51SG3Z,463,PhuQuoc,QuangNing,30/11/2023,23/10/2023,C
+Bamboo Airways,017PSW,382,DaNang,ThanhHoa,05/07/2023,18/02/2023,A
+VietNamAirline,Z3JOJ4,425,HoChiMinh,SaiGon,08/12/2023,01/11/2024,B
+VietJet Air,7PYCTW,226,CanTho,Hue,20/06/2024,25/01/2024,D
+Jetstar Pacific,516L3M,389,Vinh,HaiPhong,18/06/2023,03/09/2024,A
+VietNamAirline,8E5E2W,354,Vinh,ThanhHoa,07/10/2024,29/12/2024,D
+Bamboo Airways,ETWP5A,290,HaNoi,SaiGon,06/11/2024,21/05/2023,C
+VietNamAirline,AS1XGL,176,NhaTrang,ThanhHoa,16/06/2023,12/10/2023,C
+Jetstar Pacific,DSK9BY,381,NhaTrang,CaoBang,12/04/2024,01/09/2024,A
+VietNamAirline,U782V7,419,Vinh,CaMau,18/05/2024,27/03/2024,D
+Bamboo Airways,PAZSXA,395,Vinh,CaMau,30/09/2023,29/07/2023,B
+Bamboo Airways,H4PUTY,119,Vinh,ThanhHoa,15/03/2024,13/01/2024,D
+Jetstar Pacific,DYDVNT,398,PhuQuoc,ConDao,25/02/2023,17/10/2024,A
+VietJet Air,MR5AG6,160,CanTho,HaiPhong,22/02/2023,11/10/2023,C
+VietJet Air,M3ZPEL,157,NhaTrang,ConDao,13/09/2023,14/03/2024,A
+Bamboo Airways,9NXQB0,481,NhaTrang,SaiGon,18/10/2024,25/07/2023,A
+Bamboo Airways,66ZYO6,392,HoChiMinh,NgheAn,07/01/2024,10/01/2023,C
+VietNamAirline,1DEBRC,196,HaiPhong,NgheAn,25/10/2024,11/12/2024,C
+VietJet Air,8J9ENF,295,CanTho,ConDao,14/10/2023,28/04/2023,A
+Bamboo Airways,67IOMC,126,HaiPhong,CaoBang,07/01/2023,10/07/2024,B
+Bamboo Airways,TCP38B,493,HaNoi,QuangNing,11/11/2023,07/05/2023,D
+VietJet Air,OY1T4G,168,BuonMaThuot,DaLat,18/03/2024,08/11/2024,D
+Bamboo Airways,S0EVLA,419,HaiPhong,VungTau,13/04/2024,01/11/2023,B
+VietJet Air,D9FZKS,163,BuonMaThuot,NhaTrang,01/08/2023,20/05/2024,A
+VietJet Air,DYHT55,270,HaiPhong,ThanhHoa,08/08/2023,05/08/2024,C
+VietJet Air,9AS2M9,186,HaNoi,NgheAn,12/07/2024,12/07/2024,D
+VietJet Air,5ZCD91,160,PhuQuoc,SaiGon,09/10/2024,04/11/2023,B
+Jetstar Pacific,RZBEAF,370,HaNoi,NgheAn,13/03/2024,03/06/2024,A
+Jetstar Pacific,BRLTJ9,495,DaNang,DaLat,18/01/2024,14/04/2024,B
+Bamboo Airways,7Z7TZ6,217,DaNang,TruongSa,03/12/2023,23/01/2024,C
+Bamboo Airways,YG0X0Y,256,PhuQuoc,ConDao,16/03/2023,18/05/2024,A
+Bamboo Airways,HMYU70,420,Vinh,ThanhHoa,17/06/2023,16/04/2024,A
+VietNamAirline,VWAF7Z,472,NhaTrang,TruongSa,06/09/2024,31/07/2024,C
+VietNamAirline,7JOKFT,353,HoChiMinh,HaiPhong,18/04/2024,17/09/2024,A
+VietJet Air,Y5TZUP,336,HoChiMinh,NgheAn,23/12/2024,17/11/2024,C
+VietJet Air,GZD3D5,239,HaNoi,TruongSa,05/04/2023,11/09/2024,C
+VietNamAirline,GC7Z3Q,397,HaNoi,NgheAn,02/12/2023,06/03/2023,A
+Jetstar Pacific,5G8U1O,105,BuonMaThuot,HaiPhong,22/04/2023,14/09/2023,D
+Jetstar Pacific,E7TM6T,204,CanTho,CaMau,30/04/2023,06/02/2024,C
+VietJet Air,P98GMQ,471,Vinh,Sapa,06/02/2024,18/11/2024,C
+Bamboo Airways,91Y2U5,181,DaNang,TruongSa,05/10/2024,14/10/2024,D
+Jetstar Pacific,58054H,361,NhaTrang,ThanhHoa,09/04/2023,24/02/2023,A
+Jetstar Pacific,TIO3S8,157,HaiPhong,SaiGon,08/06/2023,03/05/2024,C
+VietJet Air,KTQXXA,487,CanTho,NgheAn,15/06/2024,30/06/2024,D
+Bamboo Airways,A4QBVA,497,CanTho,ConDao,10/11/2024,31/07/2024,D
+VietNamAirline,S4G8OL,431,BuonMaThuot,CaMau,02/09/2024,29/05/2023,A
+Bamboo Airways,A5IMPB,484,DaNang,HaNoi,11/09/2023,27/12/2024,C
+VietNamAirline,FDP4XM,229,HoChiMinh,VungTau,01/05/2023,20/03/2023,D
+VietJet Air,5OYIU1,181,CanTho,QuangNing,05/10/2024,13/07/2023,C
+Jetstar Pacific,L0ESFQ,218,HaiPhong,CaMau,20/04/2024,14/06/2023,B
+Jetstar Pacific,HUD359,413,HoChiMinh,Hue,09/12/2023,28/07/2024,C
+VietJet Air,E8L1UD,243,BuonMaThuot,HaNoi,17/09/2024,16/01/2023,C
+Bamboo Airways,Q0S0YK,314,HaiPhong,ThanhHoa,26/04/2024,07/12/2023,A
+Jetstar Pacific,PWWIH5,370,NhaTrang,NhaTrang,20/02/2024,04/06/2024,D
+VietJet Air,JF36K9,117,HaiPhong,SaiGon,12/01/2023,06/05/2024,A
+VietJet Air,CXLCGX,215,PhuQuoc,HaiPhong,07/07/2024,19/10/2023,A
+Bamboo Airways,Z7TPWR,380,HoChiMinh,Hue,22/08/2023,25/11/2023,C
+Bamboo Airways,QQMZU8,403,DaNang,TruongSa,28/02/2023,10/02/2024,A
+VietNamAirline,7WIJQL,271,NhaTrang,QuangNing,28/07/2024,31/10/2023,B
+VietJet Air,0WGTG3,361,BuonMaThuot,Sapa,16/04/2023,13/11/2024,A
+VietJet Air,XMSVCY,393,HoChiMinh,ThanhHoa,14/06/2023,03/01/2024,A
+Jetstar Pacific,GIQXJY,366,DaNang,HaNoi,13/12/2023,13/04/2024,B
+Jetstar Pacific,96720H,301,DaNang,SaiGon,25/03/2024,05/07/2024,A
+Bamboo Airways,YGDP5V,427,Vinh,ThanhHoa,24/04/2023,18/09/2023,C
+VietJet Air,TA3L90,475,BuonMaThuot,ThanhHoa,28/03/2023,05/05/2024,A
+VietJet Air,WN1VE1,444,HoChiMinh,SaiGon,20/12/2023,05/10/2023,B
+Jetstar Pacific,39TQRE,273,HoChiMinh,CaoBang,11/02/2023,11/09/2024,B
+Jetstar Pacific,0XAYB2,420,CanTho,TruongSa,19/02/2023,15/02/2023,C
+Bamboo Airways,AIAUPS,119,HoChiMinh,TruongSa,10/01/2024,13/03/2024,A
+Jetstar Pacific,IYZ78P,272,BuonMaThuot,VungTau,03/04/2024,07/02/2024,A
+VietNamAirline,7MVEQX,380,BuonMaThuot,TruongSa,29/11/2024,23/02/2023,D
+Jetstar Pacific,XHWR45,454,DaNang,ConDao,01/07/2024,02/09/2023,B
+VietNamAirline,BZV9E3,342,HaiPhong,NgheAn,02/10/2024,04/06/2024,C
+Jetstar Pacific,YLPYN9,365,HoChiMinh,Hue,30/08/2023,13/12/2024,B
+VietJet Air,JVROCO,119,HaNoi,Sapa,28/09/2023,24/02/2023,D
+Jetstar Pacific,K6KJ79,432,BuonMaThuot,Hue,11/02/2024,24/06/2023,B
+Bamboo Airways,LUFA8P,160,HaNoi,HaiPhong,18/10/2023,08/09/2023,B
+Bamboo Airways,5A86UF,303,BuonMaThuot,NhaTrang,11/05/2023,23/06/2024,C
+VietJet Air,JB1QPS,171,DaNang,SaiGon,06/11/2024,19/07/2024,C
+VietJet Air,OCR43C,261,DaNang,Hue,13/03/2024,14/01/2023,C
+VietJet Air,57PI5C,367,Vinh,HaiPhong,09/03/2024,02/08/2023,D
+VietJet Air,D6F9P3,319,HaiPhong,DaLat,27/06/2024,24/10/2024,C
+VietNamAirline,FPQVYC,406,HaiPhong,NgheAn,03/03/2023,02/05/2024,D

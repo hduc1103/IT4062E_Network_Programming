@@ -2,14 +2,10 @@
 
 import socket
 import json
-
-from model.flight import *
-from features.search import *
-
+import sqlite3
 PORT = 3000
 BUFFER_SIZE = 1024
 path = "user_data.json"
-flight_path = "flight_data.txt"
 
 
 def load_user_data():
@@ -20,28 +16,64 @@ def load_user_data():
         user_data = {}
     return user_data
 
+
 def save_user_data(user_data):
     with open(path, 'w') as file:
         json.dump(user_data, file)
 
-def load_data(filename):
-    tmp_flight_data = []
-    with open(filename, 'r') as file:
-        for line in file:
-            data = line.strip().split(',')
-            flight.add_flight(tmp_flight_data, *data)
-    return tmp_flight_data
+def create_database():
+    flight_data = [
+        ("Bamboo Airways", "XLK753", 259, "Vinh", "CaMau", "15/11/2023", "15/04/2024", "A"),
+        ("Jetstar Pacific", "UWP0DF", 305, "CanTho", "VungTau", "13/01/2024", "22/11/2024", "C"),
+        ("Jetstar Pacific", "RZBEAF", 370, "HaNoi", "NgheAn", "15/03/2024", "03/06/2024", "A"),
+        ("Jetstar Pacific", "BRLTJ9", 495, "DaNang", "DaLat", "18/01/2024", "14/04/2024", "B"),
+        ("Company A", "BRLTJ9", 495, "DaNang", "DaLat", "18/01/2024", "14/04/2024", "B"),
+        ("Company B", "BRLTJ9", 495, "DaNang", "DaLat", "18/01/2024", "14/04/2024", "B")
 
-def handle_login(client_socket, user_data, username, password, tmp_flight_data):
+    ]
+
+    conn = sqlite3.connect('flight_database.db')
+    c = conn.cursor()
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS flights (
+            company TEXT,
+            flight_num TEXT,
+            number_of_passenger INTEGER,
+            departure_points TEXT,
+            destination_points TEXT,
+            departure_date TEXT,
+            return_date TEXT,
+            seat_class TEXT
+        )
+    ''')
+
+    for flight in flight_data:
+        c.execute('''
+            INSERT INTO flights (company, flight_num, number_of_passenger, departure_points, destination_points, departure_date, return_date, seat_class)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ''', flight)
+    companies_to_delete = ("Company A", "Company B")
+
+    for company in companies_to_delete:
+        c.execute('''
+            DELETE FROM flights
+            WHERE company = ?
+        ''', (company,))
+
+    conn.commit()
+    conn.close()
+
+def log_in(client_socket, user_data, username, password):
     if username in user_data and user_data[username] == password:
         print("Login successful")
         client_socket.send("Y_login".encode('utf-8'))
-        you_are_in(client_socket, tmp_flight_data)
+        functions(client_socket)
     else:
         print("Login failed")
         client_socket.send("N_login".encode('utf-8'))
 
-def handle_registration(client_socket, user_data, username, password, tmp_flight_data):
+
+def register(client_socket, user_data, username, password):
     if username in user_data:
         print("Username existed")
         client_socket.send("N_register".encode('utf-8'))
@@ -49,9 +81,10 @@ def handle_registration(client_socket, user_data, username, password, tmp_flight
         user_data[username] = password
         save_user_data(user_data)
         client_socket.send("Y_register".encode('utf-8'))
-        you_are_in(client_socket, tmp_flight_data)
+        functions(client_socket)
 
-def you_are_in(client_socket, tmp_flight_data):
+
+def functions(client_socket):
     while True:
         received1 = client_socket.recv(BUFFER_SIZE).decode('utf-8').strip()
         if received1.lower() == "exit":
@@ -64,33 +97,17 @@ def you_are_in(client_socket, tmp_flight_data):
 
         if type1[0].lower() == "search":
             search_params = type1[1].split(',')
-            if len(search_params) >= 2:
-                departure_place = search_params[0]
-                departure_date = search_params[1]
 
-                # Prepare criteria based on user input
+            if len(search_params) == 2:
                 search_criteria = {
-                    "departure_place": departure_place,
-                    "departure_date": departure_date
+                    'departure_points': search_params[0],
+                    'destination_points': search_params[1]
                 }
-
-                if len(search_params) == 3:
-                    if len(search_params[2]) == 3:
-                        return_date = search_params[2]
-                        search_criteria["return_date"] = return_date
-                    else:
-                        airline = search_params[2]
-                        search_criteria["airline"] = airline
-
-                elif len(search_params) >= 4:
-                    pass
-
-                handle_flight_search(
-                    client_socket, tmp_flight_data, search_criteria)
+                search(client_socket, search_criteria)
             else:
-                error_message = "Please provide at least departure place and date for search!"
+                error_message = "Missing elements for searching!"
                 print(error_message)
-                client_socket.send(error_message.encode('utf-8'))
+                client_socket.send("N_search".encode('utf-8'))
 
         elif type1[0].lower() == "book":
             book_params = type1[1].split(',')
@@ -108,29 +125,38 @@ def you_are_in(client_socket, tmp_flight_data):
         elif type1[0].lower() == "manage":
             manage_params = type1[1].split(',')
 
-
-def handle_flight_search(client_socket, tmp_flight_data, search_criteria):
+#Successfull connected but cant search
+def search(client_socket, search_criteria):
     try:
-        res = search_flights(tmp_flight_data, search_criteria)
+        conn = sqlite3.connect('flight_database.db')
+        cursor = conn.cursor()
+        sql = "SELECT * FROM flights WHERE departure_points = ? AND destination_points = ?"
+        params = [search_criteria.get('departure_points'), search_criteria.get('destination_points')]
+
+        cursor.execute(sql, params)
+        res = cursor.fetchall()
 
         print("Search Results:")
         if res:
             for flight_instance in res:
-                result_str = f"{flight_instance.company}, {flight_instance.flight_num}, {flight_instance.seat_class}"
+                result_str = f"{flight_instance[1]}, {flight_instance[2]}, {flight_instance[8]}"
                 client_socket.send(result_str.encode('utf-8'))
         else:
             client_socket.send("NotFound".encode('utf-8'))
 
+        conn.close()
+
+    except sqlite3.Error as er:
+        print(f"SQLite error: {er}")
+
     except Exception as e:
-        error_message = f"Error occurred during flight search: {str(e)}"
-        print(error_message)
-        client_socket.send(error_message.encode('utf-8'))
+        print(f"Error occurred during flight search: {str(e)}")
 
     finally:
         client_socket.close()
 
 
-def handle_client(client_socket, user_data, tmp_flight_data):
+def connect_client(client_socket, user_data):
     print(f"Connected to {client_socket.getpeername()}")
 
     while True:
@@ -154,10 +180,10 @@ def handle_client(client_socket, user_data, tmp_flight_data):
 
             if type[0].lower() == "login":
                 print("Login requested")
-                handle_login(client_socket, user_data, username, password, tmp_flight_data)
+                log_in(client_socket, user_data, username, password)
             elif type[0].lower() == "register":
                 print("Registration requested")
-                handle_registration(client_socket, user_data, username, password, tmp_flight_data)
+                register(client_socket, user_data, username, password)
         except ConnectionResetError:
             break
 
@@ -165,8 +191,8 @@ def handle_client(client_socket, user_data, tmp_flight_data):
     client_socket.close()
 
 
-
 def main():
+    create_database()
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('0.0.0.0', PORT))
     server_socket.listen(socket.SOMAXCONN)
@@ -174,13 +200,12 @@ def main():
     print(f"Server listening on port {PORT}...")
 
     user_data = load_user_data()
-    tmp_flight_data = load_data(flight_path)
     while True:
         client_socket, client_addr = server_socket.accept()
         print(f"Accepted connection from {client_addr[0]}:{client_addr[1]}")
 
         try:
-            handle_client(client_socket, user_data, tmp_flight_data)
+            connect_client(client_socket, user_data)
         except ConnectionResetError:
             pass
 

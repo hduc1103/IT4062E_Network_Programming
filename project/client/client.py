@@ -48,11 +48,16 @@ def main():
                     print("Invalid format!")
                     print(menu1)
                     show_menu = False
+                elif message=="N_search":
+                    print("Input 2->6 elements for continue searching")
+                    print(menu1)
+
+                    show_menu = False
         except Exception as e:
             print(f"Error connecting to the server: {e}")
             return
 
-        print("Closing the connection.")
+        print("Closed the connection.")
 
 if __name__ == "__main__":
     main()
