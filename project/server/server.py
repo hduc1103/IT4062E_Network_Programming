@@ -3,6 +3,7 @@
 import socket
 import json
 import sqlite3
+import threading
 PORT = 3000
 BUFFER_SIZE = 1024
 path = "user_data.json"
@@ -27,13 +28,14 @@ def create_database():
         ("Jetstar Pacific", "UWP0DF", 305, "CanTho", "VungTau", "13/01/2024", "22/11/2024", "C"),
         ("Jetstar Pacific", "RZBEAF", 370, "HaNoi", "NgheAn", "15/03/2024", "03/06/2024", "A"),
         ("Jetstar Pacific", "BRLTJ9", 495, "DaNang", "DaLat", "18/01/2024", "14/04/2024", "B"),
-        ("Company A", "BRLTJ9", 495, "DaNang", "DaLat", "18/01/2024", "14/04/2024", "B"),
-        ("Company B", "BRLTJ9", 495, "DaNang", "DaLat", "18/01/2024", "14/04/2024", "B")
+        ("Vietjett Air", "XLK753", 259, "Vinh", "CaMau", "15/11/2023", "15/04/2024", "A"),
 
     ]
 
     conn = sqlite3.connect('flight_database.db')
     c = conn.cursor()
+    
+    #c.execute("DROP TABLE flights")
     c.execute('''
         CREATE TABLE IF NOT EXISTS flights (
             company TEXT,
@@ -47,18 +49,19 @@ def create_database():
         )
     ''')
 
-    for flight in flight_data:
-        c.execute('''
-            INSERT INTO flights (company, flight_num, number_of_passenger, departure_points, destination_points, departure_date, return_date, seat_class)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', flight)
-    companies_to_delete = ("Company A", "Company B")
-
-    for company in companies_to_delete:
-        c.execute('''
-            DELETE FROM flights
-            WHERE company = ?
-        ''', (company,))
+    # for flight in flight_data:
+    #     c.execute('''
+    #         INSERT INTO flights (company, flight_num, number_of_passenger, departure_points, destination_points, departure_date, return_date, seat_class)
+    #         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    #     ''', flight)
+    
+    
+    # companies_to_delete = ("Company A", "Company B")
+    # for company in companies_to_delete:
+    #     c.execute('''
+    #         DELETE FROM flights
+    #         WHERE company = ?
+    #     ''', (company,))
 
     conn.commit()
     conn.close()
@@ -80,6 +83,7 @@ def register(client_socket, user_data, username, password):
     else:
         user_data[username] = password
         save_user_data(user_data)
+        print("Registration accepted")
         client_socket.send("Y_register".encode('utf-8'))
         functions(client_socket)
 
@@ -98,14 +102,14 @@ def functions(client_socket):
         if type1[0].lower() == "search":
             search_params = type1[1].split(',')
 
-            if len(search_params) == 2:
+            if len(type1) == 2:
+                print(type1[1])
                 search_criteria = {
-                    'departure_points': search_params[0],
-                    'destination_points': search_params[1]
+                    'flight_num': type1[1]
                 }
                 search(client_socket, search_criteria)
             else:
-                error_message = "Missing elements for searching!"
+                error_message = "Missing element!"
                 print(error_message)
                 client_socket.send("N_search".encode('utf-8'))
 
@@ -120,41 +124,40 @@ def functions(client_socket):
             else:
                 error_message = "Invalid format for booking. Please provide necessary details."
                 print(error_message)
-                client_socket.send(error_message.encode('utf-8'))
+                client_socket.send("N_book".encode('utf-8'))
 
         elif type1[0].lower() == "manage":
             manage_params = type1[1].split(',')
 
-#Successfull connected but cant search
 def search(client_socket, search_criteria):
     try:
         conn = sqlite3.connect('flight_database.db')
         cursor = conn.cursor()
-        sql = "SELECT * FROM flights WHERE departure_points = ? AND destination_points = ?"
-        params = [search_criteria.get('departure_points'), search_criteria.get('destination_points')]
-
+        sql = "SELECT * FROM flights WHERE flight_num = ?"
+        params = [search_criteria.get('flight_num')]
+        print(params)
         cursor.execute(sql, params)
         res = cursor.fetchall()
-
-        print("Search Results:")
+        print("Search Results:  ")
+        result_str= ""
         if res:
-            for flight_instance in res:
-                result_str = f"{flight_instance[1]}, {flight_instance[2]}, {flight_instance[8]}"
-                client_socket.send(result_str.encode('utf-8'))
+            for tmp_flight in res:
+                result_str += f"{tmp_flight[0]},{tmp_flight[1]},{tmp_flight[7]};"
         else:
-            client_socket.send("NotFound".encode('utf-8'))
+            client_socket.send("N_found".encode('utf-8'))
+            
+        result_str = "Y_found/" + result_str
+        print(result_str)
+        client_socket.send(result_str.encode('utf-8'))
 
         conn.close()
 
     except sqlite3.Error as er:
         print(f"SQLite error: {er}")
-
+        client_socket.close()
     except Exception as e:
         print(f"Error occurred during flight search: {str(e)}")
-
-    finally:
         client_socket.close()
-
 
 def connect_client(client_socket, user_data):
     print(f"Connected to {client_socket.getpeername()}")

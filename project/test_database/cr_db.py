@@ -1,3 +1,5 @@
+#create database for testing and training with sqlite
+
 import sqlite3
 
 flight_data = [
@@ -10,7 +12,7 @@ flight_data = [
 
 ]
 
-conn = sqlite3.connect('flight_database.db')
+conn = sqlite3.connect('test_flight_database.db')
 c = conn.cursor()
 c.execute('''
     CREATE TABLE IF NOT EXISTS flights (
