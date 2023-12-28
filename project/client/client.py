@@ -7,7 +7,7 @@ SERV_PORT = 3000
 host = "127.0.0.1" #default for local test
 def main():
     menu ="1. Login\n2. Register\n3. Exit"
-    menu1 = "1. Search Flights(currently you can only search with flight_num\n2. Book tickets\n3. Manage booked tickets\n4. Exit\n "
+    menu1 = "1. Search Flights(serach <departure_point>,<destination_point>)\n2. Book tickets\n3. Manage booked tickets\n4. Exit\n "
 
     #host = input("Enter the server's IP address: ")
 

@@ -4,6 +4,7 @@ import socket
 import sqlite3
 from _thread import *
 import threading
+import queue
 PORT = 3000
 BUFFER_SIZE = 1024
 
@@ -61,11 +62,12 @@ def functions(client_socket):
         if type1[0].lower() == "search":
 
             search_params = type1[1].split(',')
-
+            
             if len(type1) == 2:
                 print(type1[1])
                 search_criteria = {
-                    'flight_num': type1[1]
+                    'departure_point': search_params[0],
+                    'destination_point': search_params[1]
                 }
                 search(client_socket, search_criteria)
             else:
@@ -94,8 +96,8 @@ def search(client_socket, search_criteria):
     try:
         conn = sqlite3.connect('flight_database.db')
         cursor = conn.cursor()
-        sql = "SELECT * FROM Flights WHERE flight_num = ?"
-        params = [search_criteria.get('flight_num')]
+        sql = "SELECT * FROM Flights WHERE departure_point = ? AND destination_point= ?"
+        params = [search_criteria.get('departure_point'),search_criteria.get('destination_point')]
         print(params)
         cursor.execute(sql, params)
         res = cursor.fetchall()
