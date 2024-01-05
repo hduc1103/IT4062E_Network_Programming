@@ -12,14 +12,21 @@ using namespace std;
 #define SERV_PORT 3000
 #define BUFFER_SIZE 1024
 
+enum class Role{
+    none,
+    admin,
+    user
+};
+
 int main()
 {
     const char *host = "127.0.0.1"; // Default for local test
 
     struct sockaddr_in server_addr;
     int client_socket;
-
+    Role cur_role = Role::none;
     cout << "1. Login\n2. Register\n3. Exit" << endl;
+    cout << "Your message: ";
 
     try
     {
@@ -43,15 +50,9 @@ int main()
         }
 
         char buffer[BUFFER_SIZE];
-        bool show_menu = true;
 
         while (true)
         {
-            if (show_menu)
-            {
-                cout << "Your message: ";
-            }
-
             string choice;
             getline(cin, choice);
 
@@ -74,46 +75,84 @@ int main()
             if (message == "N_format")
             {
                 cout << "Invalid format. Please choose a valid option!" << endl;
-                show_menu = true;
+                cout << "Your message: ";
+            }
+            else if (message == "Y_admin")
+            {   
+                cur_role = Role::admin;
+                cout << "You're the admin\n";
+                cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n4. Exit\n";
+                cout << "Your message: ";
+            }
+            else if (message == "N_ad")
+            {   
+                cout << "Please input add_flight, del_flight or modify\n";
+                cout << "Your message: ";
+            }
+            else if (message == "Y_add")
+            {
+                cout << "Successfully inserted\n";
+                cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n4. Exit\n";
+                cout << "Your message: ";
+            }
+            else if (message == "N_add")
+            {
+                cout << "Not inserted\n";
+                cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n4. Exit\n";
+                cout << "Your message: ";
+            }
+            else if(message == "N_del"){
+                cout << "The flight_num does not exist\n";
+                cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n4. Exit\n";
+                cout << "Your message: ";
+            }
+            else if(message == "Y_del"){
+                if(cur_role== Role::admin){
+                    cout<< "Deleted ";
+                }else if(cur_role == Role::user){
+                    cout<<"Deleted kdnf ";
+                }
             }
             else if (message == "Y_login")
-            {
+            {   
+                cur_role = Role::user;
                 cout << "You've logged in successfully!" << endl;
                 cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. Manage booked tickets\n4. Exit" << endl;
-                show_menu = false;
+                cout << "Your message: ";
             }
             else if (message == "N_login")
             {
                 cout << "Please check your username and password!" << endl;
-                show_menu = true;
+                cout << "Your message: ";
             }
             else if (message == "Y_register")
             {
                 cout << "You've registered successfully!" << endl;
                 cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. Manage booked tickets\n4. Exit" << endl;
-                show_menu = false;
+                cout << "Your message: ";
             }
             else if (message == "N_register")
             {
                 cout << "Your username has already existed!" << endl;
-                show_menu = true;
+                cout << "Your message: ";
             }
             else if (message == "N_in")
             {
                 cout << "Invalid format!" << endl;
                 cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. Manage booked tickets\n4. Exit" << endl;
-                show_menu = false;
+                cout << "Your message: ";
             }
             else if (message == "N_search")
             {
                 cout << "Input 2->6 elements for continuing searching" << endl;
                 cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. Manage booked tickets\n4. Exit" << endl;
-                show_menu = false;
+                cout << "Your message: ";
             }
             else if (message == "N_found")
             {
                 cout << "Can't find" << endl;
-                show_menu = false;
+                cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. Manage booked tickets\n4. Exit" << endl;
+                cout << "Your message: ";
             }
             else if (message.find("Y_found/") == 0)
             {
@@ -131,7 +170,8 @@ int main()
                     cout << flight_info << endl;
                     pos = next_pos + 1;
                 }
-                show_menu = false;
+                cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. Manage booked tickets\n4. Exit" << endl;
+                cout << "Your message: ";
             }
         }
 

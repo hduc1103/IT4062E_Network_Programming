@@ -20,6 +20,7 @@ void register_user(int client_socket, const string& username, const string& pass
 void search_flight(int client_socket, const string& departure_point, const string& destination_point) ;
 void functions(int client_socket);
 void connect_client(int client_socket);
+void admin_mode(int client_socket);
 
 struct Flight {
     string flight_num;
@@ -50,6 +51,15 @@ vector<string> split(const string& input, char delimiter) {
 
     while (getline(ss, item, delimiter)) {
         result.push_back(item);
+    }
+
+    return result;
+}
+string lower(const string& input) {
+    string result = input;
+    
+    for (char &c : result) {
+        c = tolower(c);
     }
 
     return result;

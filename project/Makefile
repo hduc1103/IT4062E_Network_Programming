@@ -1,6 +1,7 @@
-all: client server
+all: nclient nserver
 
-server:
+nserver:
 	g++ server.cpp -o server -lsqlite3
-client:
+nclient:
 	g++ client.cpp -o client 
+

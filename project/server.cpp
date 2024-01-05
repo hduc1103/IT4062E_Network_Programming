@@ -1,43 +1,45 @@
-#include <iostream>
 #include "server.h"
-
-using namespace std;
-
-#define PORT 3000
-#define BUFFER_SIZE 1024
 
 sqlite3 *db;
 
-void log_in(int client_socket, const string &username, const string &password)
+void log_in(int client_socket, const string &username, const string &password) // Log in function
 {
-    sqlite3_stmt *stmt;
-    string query = "SELECT username, password FROM Users WHERE username = ? AND password = ?";
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    if (username == "admin" && password == "1")
     {
-        cerr << "Error preparing query: " << sqlite3_errmsg(db) << endl;
-        return;
-    }
-
-    sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, password.c_str(), -1, SQLITE_STATIC);
-
-    if (sqlite3_step(stmt) == SQLITE_ROW)
-    {
-        User user;
-        user.username = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
-        user.password = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
-
-        cout << "Login successful for user: " << user.username << endl;
-        send(client_socket, "Y_login", strlen("Y_login"), 0);
-        functions(client_socket);
+        send(client_socket, "Y_admin", strlen("Y_admin"), 0);
+        admin_mode(client_socket);
     }
     else
     {
-        cout << "Login failed" << endl;
-        send(client_socket, "N_login", strlen("N_login"), 0);
-    }
+        sqlite3_stmt *stmt;
+        string query = "SELECT username, password FROM Users WHERE username = ? AND password = ?";
+        if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+        {
+            cerr << "Error preparing query: " << sqlite3_errmsg(db) << endl;
+            return;
+        }
 
-    sqlite3_finalize(stmt);
+        sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 2, password.c_str(), -1, SQLITE_STATIC);
+
+        if (sqlite3_step(stmt) == SQLITE_ROW)
+        {
+            User user;
+            user.username = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
+            user.password = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
+
+            cout << "Login successful for user: " << user.username << endl;
+            send(client_socket, "Y_login", strlen("Y_login"), 0);
+            functions(client_socket);
+        }
+        else
+        {
+            cout << "Login failed" << endl;
+            send(client_socket, "N_login", strlen("N_login"), 0);
+        }
+
+        sqlite3_finalize(stmt);
+    }
 }
 
 void register_user(int client_socket, const string &username, const string &password)
@@ -84,6 +86,164 @@ void register_user(int client_socket, const string &username, const string &pass
         }
 
         sqlite3_finalize(stmt);
+    }
+}
+
+void admin_mode(int client_socket)
+{
+    sqlite3_stmt *stmt;
+    char buffer[BUFFER_SIZE];
+    int bytes_received;
+
+    while (true)
+    {
+        bytes_received = recv(client_socket, buffer, BUFFER_SIZE - 1, 0);
+        if (bytes_received <= 0)
+        {
+            break;
+        }
+
+        buffer[bytes_received] = '\0';
+        string received(buffer);
+
+        if (received == "exit")
+        {
+            break;
+        }
+
+        vector<string> type1 = split(received, ' ');
+        if (type1.size() < 2 || (type1[0] != "add_flight" && type1[0] != "del_flight" && type1[0] != "modify"))
+        {
+            cout << "Invalid format" << endl;
+            send(client_socket, "N_ad", strlen("N_ad"), 0);
+            continue;
+        }
+
+        if (type1[0] == "add_flight")
+        {
+            vector<string> insert_params = split(type1[1], ',');
+            if (insert_params.size() == 6)
+            {
+                Flight newFlight;
+                try
+                {
+                    newFlight.flight_num = insert_params[0];
+                    newFlight.number_of_passenger = stoi(insert_params[1]);
+                    newFlight.departure_point = insert_params[2];
+                    newFlight.destination_point = insert_params[3];
+                    newFlight.departure_date = insert_params[4];
+                    newFlight.return_date = insert_params[5];
+                }
+                catch (const std::invalid_argument &ia)
+                {
+                    cerr << "Invalid argument: " << ia.what() << endl;
+                    send(client_socket, "N_add", strlen("N_add"), 0);
+                    continue;
+                }
+                string check_query = "SELECT flight_num FROM Flights WHERE flight_num = ?";
+                if (sqlite3_prepare_v2(db, check_query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+                {
+                    cerr << "Error preparing query: " << sqlite3_errmsg(db) << endl;
+                    send(client_socket, "N_add", strlen("N_add"), 0);
+                    continue;
+                }
+                sqlite3_bind_text(stmt, 1, newFlight.flight_num.c_str(), -1, SQLITE_STATIC);
+                if (sqlite3_step(stmt) == SQLITE_ROW)
+                {
+                    cout << "Flight number already exists" << endl;
+                    send(client_socket, "N_add", strlen("N_add"), 0);
+                    sqlite3_finalize(stmt);
+                    continue;
+                }
+                sqlite3_finalize(stmt);
+
+                string insert_query = "INSERT INTO Flights (flight_num, number_of_passenger, departure_point, destination_point, departure_date, return_date) VALUES (?, ?, ?, ?, ?, ?)";
+                if (sqlite3_prepare_v2(db, insert_query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+                {
+                    cerr << "Error preparing query: " << sqlite3_errmsg(db) << endl;
+                    send(client_socket, "N_add", strlen("N_add"), 0);
+                    continue;
+                }
+
+                // Binding parameters to avoid SQL injection
+                sqlite3_bind_text(stmt, 1, newFlight.flight_num.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_int(stmt, 2, newFlight.number_of_passenger);
+                sqlite3_bind_text(stmt, 3, newFlight.departure_point.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_text(stmt, 4, newFlight.destination_point.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_text(stmt, 5, newFlight.departure_date.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_text(stmt, 6, newFlight.return_date.c_str(), -1, SQLITE_STATIC);
+
+                if (sqlite3_step(stmt) != SQLITE_DONE)
+                {
+                    cerr << "Error inserting data: " << sqlite3_errmsg(db) << endl;
+                    send(client_socket, "N_add", strlen("N_add"), 0);
+                }
+                else
+                {
+                    send(client_socket, "Y_add", strlen("Y_add"), 0);
+                }
+                sqlite3_finalize(stmt);
+            }
+            else
+            {
+                send(client_socket, "N_add", strlen("N_add"), 0);
+            }
+        }
+        else if (type1[0] == "del_flight")
+{
+    vector<string> delete_params = split(type1[1], ',');
+    if (delete_params.size() == 1)
+    {
+        string flight_num = delete_params[0];
+
+        // Check if the flight exists
+        string check_query = "SELECT flight_num FROM Flights WHERE flight_num = ?";
+        if (sqlite3_prepare_v2(db, check_query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+        {
+            cerr << "Error preparing query: " << sqlite3_errmsg(db) << endl;
+            send(client_socket, "N_del", strlen("N_del"), 0);
+            continue;
+        }
+        sqlite3_bind_text(stmt, 1, flight_num.c_str(), -1, SQLITE_STATIC);
+
+        if (sqlite3_step(stmt) != SQLITE_ROW)
+        {
+            cout << "Flight number does not exist" << endl;
+            send(client_socket, "N_del", strlen("N_del"), 0);
+            sqlite3_finalize(stmt);
+            continue;
+        }
+        sqlite3_finalize(stmt);
+
+        // Delete the flight
+        string delete_query = "DELETE FROM Flights WHERE flight_num = ?";
+        if (sqlite3_prepare_v2(db, delete_query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+        {
+            cerr << "Error preparing query: " << sqlite3_errmsg(db) << endl;
+            send(client_socket, "N_del", strlen("N_del"), 0);
+            continue;
+        }
+        sqlite3_bind_text(stmt, 1, flight_num.c_str(), -1, SQLITE_STATIC);
+
+        if (sqlite3_step(stmt) != SQLITE_DONE)
+        {
+            cerr << "Error deleting flight: " << sqlite3_errmsg(db) << endl;
+            send(client_socket, "N_del", strlen("N_del"), 0);
+        }
+        else
+        {
+            cout << "Flight deleted successfully" << endl;
+            send(client_socket, "Y_del", strlen("Y_del"), 0);
+        }
+        sqlite3_finalize(stmt);
+    }
+    else
+    {
+        send(client_socket, "N_del", strlen("N_del"), 0);
+    }
+}
+
+
     }
 }
 
@@ -156,8 +316,6 @@ void functions(int client_socket)
         else if (type1[0] == "manage")
         {
             vector<string> manage_params = split(type1[1], ',');
-
-            // Implement manage functionality here
         }
     }
 
@@ -211,7 +369,6 @@ void search_flight(int client_socket, const string &departure_point, const strin
 
     sqlite3_finalize(stmt);
 }
-
 void connect_client(int client_socket)
 {
     char buffer[BUFFER_SIZE];
@@ -243,7 +400,7 @@ void connect_client(int client_socket)
             continue;
         }
 
-        string command = received.substr(0, space_pos);
+        string command = lower(received.substr(0, space_pos));
         string args = received.substr(space_pos + 1);
 
         if (command == "login")
@@ -258,7 +415,6 @@ void connect_client(int client_socket)
 
             string username = args.substr(0, comma_pos);
             string password = args.substr(comma_pos + 1);
-
             cout << "Login requested" << endl;
             log_in(client_socket, username, password);
         }
