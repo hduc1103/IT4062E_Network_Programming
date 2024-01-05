@@ -3,13 +3,15 @@
 #include <vector>
 #include <tuple>
 
+using namespace std;
+
 int main() {
     sqlite3* conn;
     int rc;
 
     rc = sqlite3_open("flight_database.db", &conn);
     if (rc) {
-        std::cerr << "Can't open database: " << sqlite3_errmsg(conn) << std::endl;
+        cerr << "Can't open database: " << sqlite3_errmsg(conn) << endl;
         return 1;
     }
 
@@ -28,14 +30,14 @@ int main() {
 
     rc = sqlite3_exec(conn, createFlightsTableSQL, nullptr, nullptr, nullptr);
     if (rc != SQLITE_OK) {
-        std::cerr << "SQL error: " << sqlite3_errmsg(conn) << std::endl;
+        cerr << "SQL error: " << sqlite3_errmsg(conn) << endl;
         sqlite3_close(conn);
         return 1;
     }
 
     const char* insertFlightsSQL = "INSERT INTO Flights (flight_num, number_of_passenger, departure_point, destination_point, departure_date, return_date) VALUES (?, ?, ?, ?, ?, ?)";
     
-    std::vector<std::tuple<std::string, int, std::string, std::string, std::string, std::string>> flights_data = {
+    vector<tuple<string, int, string, string, string, string>> flights_data = {
         {"ABC123", 150, "CaMau", "Vinh", "2023-01-15", "2023-01-20"},
         {"DEF456", 200, "HaNoi", "HoChiMinh", "2023-02-10", "2023-02-15"},
         {"GHI789", 100, "NgheAn", "CaoBang", "2023-03-05", "2023-03-10"},
@@ -46,21 +48,21 @@ int main() {
     for (const auto& row : flights_data) {
         rc = sqlite3_prepare_v2(conn, insertFlightsSQL, -1, &stmt, nullptr);
         if (rc != SQLITE_OK) {
-            std::cerr << "SQL error: " << sqlite3_errmsg(conn) << std::endl;
+            cerr << "SQL error: " << sqlite3_errmsg(conn) << endl;
             sqlite3_close(conn);
             return 1;
         }
 
-        sqlite3_bind_text(stmt, 1, std::get<0>(row).c_str(), -1, SQLITE_STATIC);
-        sqlite3_bind_int(stmt, 2, std::get<1>(row));
-        sqlite3_bind_text(stmt, 3, std::get<2>(row).c_str(), -1, SQLITE_STATIC);
-        sqlite3_bind_text(stmt, 4, std::get<3>(row).c_str(), -1, SQLITE_STATIC);
-        sqlite3_bind_text(stmt, 5, std::get<4>(row).c_str(), -1, SQLITE_STATIC);
-        sqlite3_bind_text(stmt, 6, std::get<5>(row).c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 1, get<0>(row).c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_int(stmt, 2, get<1>(row));
+        sqlite3_bind_text(stmt, 3, get<2>(row).c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 4, get<3>(row).c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 5, get<4>(row).c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 6, get<5>(row).c_str(), -1, SQLITE_STATIC);
 
         rc = sqlite3_step(stmt);
         if (rc != SQLITE_DONE) {
-            std::cerr << "SQL error: " << sqlite3_errmsg(conn) << std::endl;
+            cerr << "SQL error: " << sqlite3_errmsg(conn) << endl;
             sqlite3_finalize(stmt);
             sqlite3_close(conn);
             return 1;
@@ -80,14 +82,14 @@ int main() {
 
     rc = sqlite3_exec(conn, createUsersTableSQL, nullptr, nullptr, nullptr);
     if (rc != SQLITE_OK) {
-        std::cerr << "SQL error: " << sqlite3_errmsg(conn) << std::endl;
+        cerr << "SQL error: " << sqlite3_errmsg(conn) << endl;
         sqlite3_close(conn);
         return 1;
     }
 
     const char* insertUsersSQL = "INSERT INTO Users (user_id, username, password) VALUES (?, ?, ?)";
     
-    std::vector<std::tuple<int, std::string, std::string>> users_data = {
+    vector<tuple<int, string, string>> users_data = {
         {1, "user1", "abc123"},
         {2, "user2", "deg456"},
         {3, "user3", "abc@123"},
@@ -98,18 +100,18 @@ int main() {
     for (const auto& row : users_data) {
         rc = sqlite3_prepare_v2(conn, insertUsersSQL, -1, &stmt, nullptr);
         if (rc != SQLITE_OK) {
-            std::cerr << "SQL error: " << sqlite3_errmsg(conn) << std::endl;
+            cerr << "SQL error: " << sqlite3_errmsg(conn) << endl;
             sqlite3_close(conn);
             return 1;
         }
 
-        sqlite3_bind_int(stmt, 1, std::get<0>(row));
-        sqlite3_bind_text(stmt, 2, std::get<1>(row).c_str(), -1, SQLITE_STATIC);
-        sqlite3_bind_text(stmt, 3, std::get<2>(row).c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_int(stmt, 1, get<0>(row));
+        sqlite3_bind_text(stmt, 2, get<1>(row).c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 3, get<2>(row).c_str(), -1, SQLITE_STATIC);
 
         rc = sqlite3_step(stmt);
         if (rc != SQLITE_DONE) {
-            std::cerr << "SQL error: " << sqlite3_errmsg(conn) << std::endl;
+            cerr << "SQL error: " << sqlite3_errmsg(conn) << endl;
             sqlite3_finalize(stmt);
             sqlite3_close(conn);
             return 1;
@@ -131,14 +133,14 @@ int main() {
 
     rc = sqlite3_exec(conn, createTicketsTableSQL, nullptr, nullptr, nullptr);
     if (rc != SQLITE_OK) {
-        std::cerr << "SQL error: " << sqlite3_errmsg(conn) << std::endl;
+        cerr << "SQL error: " << sqlite3_errmsg(conn) << endl;
         sqlite3_close(conn);
         return 1;
     }
 
     const char* insertTicketsSQL = "INSERT INTO Tickets (ticket_code, user_id, flight_num, ticket_price) VALUES (?, ?, ?, ?)";
     
-    std::vector<std::tuple<std::string, int, std::string, double>> tickets_data = {
+    vector<tuple<string, int, string, double>> tickets_data = {
         {"TCKT123", 1, "ABC123", 250.00},
         {"TCKT456", 2, "DEF456", 200.00},
         {"TCKT789", 3, "GHI789", 600.00},
@@ -149,19 +151,19 @@ int main() {
     for (const auto& row : tickets_data) {
         rc = sqlite3_prepare_v2(conn, insertTicketsSQL, -1, &stmt, nullptr);
         if (rc != SQLITE_OK) {
-            std::cerr << "SQL error: " << sqlite3_errmsg(conn) << std::endl;
+            cerr << "SQL error: " << sqlite3_errmsg(conn) << endl;
             sqlite3_close(conn);
             return 1;
         }
 
-        sqlite3_bind_text(stmt, 1, std::get<0>(row).c_str(), -1, SQLITE_STATIC);
-        sqlite3_bind_int(stmt, 2, std::get<1>(row));
-        sqlite3_bind_text(stmt, 3, std::get<2>(row).c_str(), -1, SQLITE_STATIC);
-        sqlite3_bind_double(stmt, 4, std::get<3>(row));
+        sqlite3_bind_text(stmt, 1, get<0>(row).c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_int(stmt, 2, get<1>(row));
+        sqlite3_bind_text(stmt, 3, get<2>(row).c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_double(stmt, 4, get<3>(row));
 
         rc = sqlite3_step(stmt);
         if (rc != SQLITE_DONE) {
-            std::cerr << "SQL error: " << sqlite3_errmsg(conn) << std::endl;
+            cerr << "SQL error: " << sqlite3_errmsg(conn) << endl;
             sqlite3_finalize(stmt);
             sqlite3_close(conn);
             return 1;

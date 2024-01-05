@@ -23,7 +23,11 @@ void log_in(int client_socket, const string &username, const string &password)
 
     if (sqlite3_step(stmt) == SQLITE_ROW)
     {
-        cout << "Login successful" << endl;
+        User user;
+        user.username = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
+        user.password = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
+
+        cout << "Login successful for user: " << user.username << endl;
         send(client_socket, "Y_login", strlen("Y_login"), 0);
         functions(client_socket);
     }
@@ -50,14 +54,11 @@ void register_user(int client_socket, const string &username, const string &pass
 
     if (sqlite3_step(stmt) == SQLITE_ROW)
     {
-        cout << "Username existed" << endl;
+        cout << "Username already exists" << endl;
         send(client_socket, "N_register", strlen("N_register"), 0);
     }
     else
     {
-        cout << "Registration accepted" << endl;
-        send(client_socket, "Y_register", strlen("Y_register"), 0);
-
         query = "INSERT INTO Users (username, password) VALUES (?, ?)";
         if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
         {
@@ -71,6 +72,15 @@ void register_user(int client_socket, const string &username, const string &pass
         if (sqlite3_step(stmt) != SQLITE_DONE)
         {
             cerr << "Error inserting user data: " << sqlite3_errmsg(db) << endl;
+        }
+        else
+        {
+            User newUser;
+            newUser.username = username;
+            newUser.password = password;
+
+            cout << "Registration successful for user: " << newUser.username << endl;
+            send(client_socket, "Y_register", strlen("Y_register"), 0);
         }
 
         sqlite3_finalize(stmt);
@@ -156,46 +166,50 @@ void functions(int client_socket)
 
 void search_flight(int client_socket, const string &departure_point, const string &destination_point)
 {
-    try
+    sqlite3_stmt *stmt;
+    string query = "SELECT * FROM Flights WHERE departure_point = ? AND destination_point = ?";
+    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
-        sqlite3_stmt *stmt;
-        string query = "SELECT * FROM Flights WHERE departure_point = ? AND destination_point = ?";
-        if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
-        {
-            cerr << "Error preparing query: " << sqlite3_errmsg(db) << endl;
-            send(client_socket, "N_found", strlen("N_found"), 0);
-            return;
-        }
-
-        sqlite3_bind_text(stmt, 1, departure_point.c_str(), -1, SQLITE_STATIC);
-        sqlite3_bind_text(stmt, 2, destination_point.c_str(), -1, SQLITE_STATIC);
-
-        string result_str = "Y_found/";
-
-        while (sqlite3_step(stmt) == SQLITE_ROW)
-        {
-            result_str += to_string(sqlite3_column_int(stmt, 0)) + ",";
-            result_str += to_string(sqlite3_column_int(stmt, 1)) + ",";
-            // Add other columns here
-            result_str += ";";
-        }
-
-        if (result_str == "Y_found/")
-        {
-            send(client_socket, "N_found", strlen("N_found"), 0);
-        }
-        else
-        {
-            send(client_socket, result_str.c_str(), result_str.length(), 0);
-        }
-
-        sqlite3_finalize(stmt);
+        cerr << "Error preparing query: " << sqlite3_errmsg(db) << endl;
+        send(client_socket, "N_found", strlen("N_found"), 0);
+        return;
     }
-    catch (exception &e)
+
+    sqlite3_bind_text(stmt, 1, departure_point.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, destination_point.c_str(), -1, SQLITE_STATIC);
+
+    string result_str = "Y_found/";
+    bool found = false;
+
+    while (sqlite3_step(stmt) == SQLITE_ROW)
     {
-        cerr << "Error occurred during flight search: " << e.what() << endl;
+        found = true;
+        Flight flight;
+        flight.flight_num = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
+        flight.number_of_passenger = sqlite3_column_int(stmt, 1);
+        flight.departure_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
+        flight.destination_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 3));
+        flight.departure_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 4));
+        flight.return_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 5));
+
+        result_str += flight.flight_num + ",";
+        result_str += to_string(flight.number_of_passenger) + ",";
+        result_str += flight.departure_point + ",";
+        result_str += flight.destination_point + ",";
+        result_str += flight.departure_date + ",";
+        result_str += flight.return_date + ";";
+    }
+
+    if (!found)
+    {
         send(client_socket, "N_found", strlen("N_found"), 0);
     }
+    else
+    {
+        send(client_socket, result_str.c_str(), result_str.length(), 0);
+    }
+
+    sqlite3_finalize(stmt);
 }
 
 void connect_client(int client_socket)
@@ -278,7 +292,7 @@ int main()
 
     if (sqlite3_open("flight_database.db", &db) != SQLITE_OK)
     {
-        cerr << "Error opening database" << endl;
+        cerr << "Error opening database: " << sqlite3_errmsg(db) << endl;
         return 1;
     }
 
@@ -286,6 +300,7 @@ int main()
     if (server_socket == -1)
     {
         cerr << "Error creating server socket" << endl;
+        sqlite3_close(db);
         return 1;
     }
 
@@ -296,12 +311,16 @@ int main()
     if (bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)
     {
         cerr << "Error binding server socket" << endl;
+        close(server_socket);
+        sqlite3_close(db);
         return 1;
     }
 
     if (listen(server_socket, SOMAXCONN) == -1)
     {
         cerr << "Error listening on server socket" << endl;
+        close(server_socket);
+        sqlite3_close(db);
         return 1;
     }
 
