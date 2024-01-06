@@ -134,11 +134,14 @@ void admin_mode(int client_socket)
                 try
                 {
                     newFlight.flight_num = insert_params[0];
-                    newFlight.number_of_passenger = stoi(insert_params[1]);
-                    newFlight.departure_point = insert_params[2];
-                    newFlight.destination_point = insert_params[3];
-                    newFlight.departure_date = insert_params[4];
-                    newFlight.return_date = insert_params[5];
+                    newFlight.num_A = stoi(insert_params[1]);
+                    newFlight.num_B = stoi(insert_params[2]);
+                    newFlight.price_A = stoi(insert_params[3]);
+                    newFlight.price_B = stoi(insert_params[4]);
+                    newFlight.departure_point = insert_params[5];
+                    newFlight.destination_point = insert_params[6];
+                    newFlight.departure_date = insert_params[7];
+                    newFlight.return_date = insert_params[8];
                 }
                 catch (const std::invalid_argument &ia)
                 {
@@ -173,11 +176,14 @@ void admin_mode(int client_socket)
 
                 // Binding parameters to avoid SQL injection
                 sqlite3_bind_text(stmt, 1, newFlight.flight_num.c_str(), -1, SQLITE_STATIC);
-                sqlite3_bind_int(stmt, 2, newFlight.number_of_passenger);
-                sqlite3_bind_text(stmt, 3, newFlight.departure_point.c_str(), -1, SQLITE_STATIC);
-                sqlite3_bind_text(stmt, 4, newFlight.destination_point.c_str(), -1, SQLITE_STATIC);
-                sqlite3_bind_text(stmt, 5, newFlight.departure_date.c_str(), -1, SQLITE_STATIC);
-                sqlite3_bind_text(stmt, 6, newFlight.return_date.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_int(stmt, 2, newFlight.num_A);
+                sqlite3_bind_int(stmt, 3, newFlight.num_B);
+                sqlite3_bind_int(stmt, 4, newFlight.price_A);
+                sqlite3_bind_int(stmt, 5, newFlight.price_B);
+                sqlite3_bind_text(stmt, 6, newFlight.departure_point.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_text(stmt, 7, newFlight.destination_point.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_text(stmt, 8, newFlight.departure_date.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_text(stmt, 9, newFlight.return_date.c_str(), -1, SQLITE_STATIC);
 
                 if (sqlite3_step(stmt) != SQLITE_DONE)
                 {
@@ -369,7 +375,7 @@ void functions(int client_socket)
         result_str += flight.departure_date + ",";
         result_str += flight.return_date + ",";
         result_str += ticket.seat_class + ",";
-        result_str += formatted_price + ";";
+        result_str += formatted_price + "VND" + ";";
     }
 
     sqlite3_finalize(stmt);
@@ -441,7 +447,7 @@ void functions(int client_socket)
         result_str += flight.departure_date + ",";
         result_str += flight.return_date + ",";
         result_str += ticket.seat_class + ",";
-        result_str += formatted_price + ";";
+        result_str += formatted_price + "VND"+";";
     }
 
     sqlite3_finalize(stmt);
@@ -482,14 +488,20 @@ void search_flight(int client_socket, const string &departure_point, const strin
         found = true;
         Flights flight;
         flight.flight_num = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
-        flight.number_of_passenger = sqlite3_column_int(stmt, 1);
-        flight.departure_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
-        flight.destination_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 3));
-        flight.departure_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 4));
-        flight.return_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 5));
+        flight.num_A = sqlite3_column_int(stmt, 1);
+        flight.num_B = sqlite3_column_int(stmt, 2);
+        flight.price_A = sqlite3_column_int(stmt, 3);
+        flight.price_B = sqlite3_column_int(stmt, 4);
+        flight.departure_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 5));
+        flight.destination_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 6));
+        flight.departure_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 7));
+        flight.return_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 8));
 
         result_str += flight.flight_num + ",";
-        result_str += to_string(flight.number_of_passenger) + ",";
+        result_str += to_string(flight.num_A) + ",";
+        result_str += to_string(flight.num_B) + ",";
+        result_str += to_string(flight.price_A) + " VND" + ",";
+        result_str += to_string(flight.price_B) + " VND"+ ",";
         result_str += flight.departure_point + ",";
         result_str += flight.destination_point + ",";
         result_str += flight.departure_date + ",";
