@@ -11,6 +11,8 @@
 #include <sstream>
 #include <cstdlib> 
 #include <ctime> 
+#include <iomanip>
+
 using namespace std;
 
 #define PORT 3000
@@ -23,10 +25,10 @@ void functions(int client_socket);
 void connect_client(int client_socket);
 void admin_mode(int client_socket);
 void book_flight(int client_socket, const string flight_num, const string seat_class);
-
+void cancel_flight(int client_socket, const string ticket_code);
 string cur_user;
 
-struct Flight {
+struct Flights {
     string flight_num;
     int number_of_passenger;
     string departure_point;
@@ -45,6 +47,7 @@ struct Ticket {
     string ticket_code;
     int user_id;
     string flight_num;
+    string seat_class;
     double ticket_price;
 };
 
