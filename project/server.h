@@ -9,7 +9,8 @@
 #include <cstring>
 #include <vector>
 #include <sstream>
-
+#include <cstdlib> 
+#include <ctime> 
 using namespace std;
 
 #define PORT 3000
@@ -21,6 +22,9 @@ void search_flight(int client_socket, const string& departure_point, const strin
 void functions(int client_socket);
 void connect_client(int client_socket);
 void admin_mode(int client_socket);
+void book_flight(int client_socket, const string flight_num, const string seat_class);
+
+string cur_user;
 
 struct Flight {
     string flight_num;
@@ -64,3 +68,20 @@ string lower(const string& input) {
 
     return result;
 }
+string generate_ticket_code() {
+    srand(time(NULL));
+
+    const string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const int alphabet_length = alphabet.length();
+
+    string ticket_code;
+
+    for (int i = 0; i < 3; ++i) {
+        ticket_code += alphabet[rand() % alphabet_length];
+    }
+    for (int i = 0; i < 3; ++i) {
+        ticket_code += to_string(rand() % 10);
+    }
+    return ticket_code;
+}
+

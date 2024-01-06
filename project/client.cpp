@@ -12,7 +12,8 @@ using namespace std;
 #define SERV_PORT 3000
 #define BUFFER_SIZE 1024
 
-enum class Role{
+enum class Role
+{
     none,
     admin,
     user
@@ -78,14 +79,21 @@ int main()
                 cout << "Your message: ";
             }
             else if (message == "Y_admin")
-            {   
+            {
                 cur_role = Role::admin;
                 cout << "You're the admin\n";
                 cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n4. Exit\n";
                 cout << "Your message: ";
             }
+            else if (message == "O_log")
+            {
+                cur_role = Role::none; // Resetting the role to none
+                cout << "You've logged out successfully!" << endl;
+                cout << "1. Login\n2. Register\n3. Exit" << endl;
+                cout << "Your message: ";
+            }
             else if (message == "N_ad")
-            {   
+            {
                 cout << "Please input add_flight, del_flight or modify\n";
                 cout << "Your message: ";
             }
@@ -101,20 +109,27 @@ int main()
                 cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n4. Exit\n";
                 cout << "Your message: ";
             }
-            else if(message == "N_del"){
+            else if (message == "N_del")
+            {
                 cout << "The flight_num does not exist\n";
                 cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n4. Exit\n";
                 cout << "Your message: ";
             }
-            else if(message == "Y_del"){
-                if(cur_role== Role::admin){
-                    cout<< "Deleted ";
-                }else if(cur_role == Role::user){
-                    cout<<"Deleted kdnf ";
+            else if (message == "Y_del")
+            {
+                if (cur_role == Role::admin)
+                {
+                    cout << "Deleted \n";
+                    cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n4. Exit\n";
+                    cout << "Your message: ";
+                }
+                else if (cur_role == Role::user)
+                {
+                    cout << "Deleted kdnf ";
                 }
             }
             else if (message == "Y_login")
-            {   
+            {
                 cur_role = Role::user;
                 cout << "You've logged in successfully!" << endl;
                 cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. Manage booked tickets\n4. Exit" << endl;
@@ -127,6 +142,7 @@ int main()
             }
             else if (message == "Y_register")
             {
+                cur_role = Role::user;
                 cout << "You've registered successfully!" << endl;
                 cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. Manage booked tickets\n4. Exit" << endl;
                 cout << "Your message: ";
@@ -170,6 +186,20 @@ int main()
                     cout << flight_info << endl;
                     pos = next_pos + 1;
                 }
+                cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. Manage booked tickets\n4. Exit" << endl;
+                cout << "Your message: ";
+            }
+            else if (message.find("Y_book/") == 0)
+            {
+                string ticket_info = message.substr(7);
+                cout << "Your ticket ID: " << ticket_info << endl;
+                cout << "You've booked successfully\n";
+                cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. Manage booked tickets\n4. Exit" << endl;
+                cout << "Your message: ";
+            }
+            else if (message == "N_book")
+            {
+                cout << "Can't find your flight number" << endl;
                 cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. Manage booked tickets\n4. Exit" << endl;
                 cout << "Your message: ";
             }
