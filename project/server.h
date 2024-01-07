@@ -26,6 +26,7 @@ void connect_client(int client_socket);
 void admin_mode(int client_socket);
 void book_flight(int client_socket, const string flight_num, const string seat_class);
 void cancel_flight(int client_socket, const string ticket_code);
+void update_seat_count(sqlite3 *db, const string &flight_num, const string &seat_class, int adjustment);
 string cur_user;
 
 struct Flights

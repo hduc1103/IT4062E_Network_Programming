@@ -71,6 +71,7 @@ int main()
             else if (message == "N_ad")
             {
                 std::cout << "Please input add_flight, del_flight or modify\n";
+                print_admin_menu();
             }
             else if (message == "Y_add")
             {
@@ -163,6 +164,9 @@ int main()
             {
                 std::cout << "Can't find your flight number" << endl;
                 print_functions();
+            }else if(message == "N_flight_not_found"){
+                std:: cout <<"Can't find your flight number"<< endl;
+                print_functions();
             }
             else if (message == "N_book_miss")
             {
@@ -208,6 +212,13 @@ int main()
             {
                 string ticket_code = message.substr(9);
                 std::cout << "You've cancelled ticket: " << ticket_code << endl;
+                print_functions();
+            }else if(message== "N_invalid_class"){
+                std:: cout<<"Invalid seat class\n";
+                print_functions();
+            }else if(message.find("N_no_seats/")==0){
+                string message_no_seats= message.substr(11);
+                std::cout << "No seat class " << message_no_seats<< " available"<<endl; 
                 print_functions();
             }
         }
