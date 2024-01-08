@@ -141,7 +141,7 @@ int main()
         user_id INTEGER,
         flight_num VARCHAR(20),
         seat_class TEXT,
-        ticket_price REAL,
+        ticket_price INTEGER,
         payment TEXT CHECK(payment IN ('PAID', 'NOT_PAID')),
         FOREIGN KEY (user_id) REFERENCES Users(user_id),
         FOREIGN KEY (flight_num) REFERENCES Flights(flight_num)

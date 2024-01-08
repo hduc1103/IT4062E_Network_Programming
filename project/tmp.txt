@@ -1,0 +1,5 @@
+Tasks left:
+Update for change and search
+Log all in server terminal
+Notification
+Payment func

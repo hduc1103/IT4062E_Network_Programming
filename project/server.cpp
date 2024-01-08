@@ -2,7 +2,7 @@
 
 sqlite3 *db;
 
-void log_in(int client_socket, const string &username, const string &password) // Log in function
+void log_in(int client_socket, const string &username, const string &password, string cur_user) // Log in function
 {
     if (username == "admin" && password == "1")
     {
@@ -30,7 +30,7 @@ void log_in(int client_socket, const string &username, const string &password) /
             cur_user = username;
             cout << "Login successful for user: " << user.username << endl;
             send(client_socket, "Y_login", strlen("Y_login"), 0);
-            functions(client_socket);
+            functions(client_socket, cur_user);
         }
         else
         {
@@ -42,7 +42,7 @@ void log_in(int client_socket, const string &username, const string &password) /
     }
 }
 
-void register_user(int client_socket, const string &username, const string &password)
+void register_user(int client_socket, const string &username, const string &password, string cur_user)
 {
     sqlite3_stmt *stmt;
     string query = "SELECT username FROM Users WHERE username = ?";
@@ -83,7 +83,7 @@ void register_user(int client_socket, const string &username, const string &pass
             cur_user = username;
             cout << "Registration successful for user: " << newUser.username << endl;
             send(client_socket, "Y_register", strlen("Y_register"), 0);
-            functions(client_socket);
+            functions(client_socket, cur_user);
         }
 
         sqlite3_finalize(stmt);
@@ -281,7 +281,7 @@ void admin_mode(int client_socket)
     }
 }
 
-void functions(int client_socket)
+void functions(int client_socket, string cur_user)
 {
     char buffer[BUFFER_SIZE];
     int bytes_received;
@@ -309,7 +309,7 @@ void functions(int client_socket)
         }
         vector<string> type1 = split(received, ' ');
 
-        if (((lower(type1[0]).compare("search") != 0 && type1.size() < 2) && (lower(type1[0]).compare("book") != 0 && type1.size() < 2) && lower(type1[0]).compare("view") != 0) && lower(type1[0]).compare("print") != 0)
+        if (((lower(type1[0]).compare("search") != 0 && type1.size() < 2) && (lower(type1[0]).compare("book") != 0 && type1.size() < 2) && lower(type1[0]).compare("view") != 0) && lower(type1[0]).compare("print") != 0 && lower(type1[0]).compare("pay")!=0 && lower(type1[0]).compare("change")!=0)
         {
             cout << "Invalid format" << endl;
             send(client_socket, "N_in", strlen("N_in"), 0);
@@ -342,7 +342,7 @@ void functions(int client_socket)
                 string flight_num = book_params[0];
                 string seat_class = book_params[1];
 
-                book_flight(client_socket, flight_num, seat_class);
+                book_flight(client_socket, flight_num, seat_class, cur_user);
             }
             else
             {
@@ -487,6 +487,13 @@ void functions(int client_socket)
                 send(client_socket, result_str.c_str(), result_str.length(), 0);
             }
         }
+        else if(lower(type1[0]) == "pay"){
+
+        }
+        else if(lower(type1[0]) == "change"){
+            vector<string> change_params= split(type1[1],',');
+            change_flight(client_socket,change_params[0],change_params[1],change_params[2],cur_user);
+        }
     }
 
     close(client_socket);
@@ -546,11 +553,26 @@ void search_flight(int client_socket, const string &departure_point, const strin
     sqlite3_finalize(stmt);
 }
 
-void book_flight(int client_socket, const string flight_num, const string seat_class)
-{
-    double ticket_price = (seat_class == "A") ? 300.00 : 150.00;
-
+void book_flight(int client_socket, const string flight_num, const string seat_class, string cur_user)
+{   
     sqlite3_stmt *stmt;
+    int ticket_price = 0;
+    string query_price = "SELECT ";
+    query_price += (seat_class == "A" ? "price_A" : "price_B");
+    query_price += " FROM Flights WHERE flight_num = ?";
+
+    sqlite3_prepare_v2(db, query_price.c_str(), -1, &stmt, nullptr);
+    sqlite3_bind_text(stmt, 1, flight_num.c_str(), -1, SQLITE_STATIC);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        ticket_price = sqlite3_column_int(stmt, 0);
+    }
+    else
+    {
+        cerr << "Failed to retrieve ticket price." << endl;
+    }   
+
     string query_seat;
     int available_seats;
 
@@ -629,6 +651,7 @@ void book_flight(int client_socket, const string flight_num, const string seat_c
         string ticket_code = generate_ticket_code();
 
         //Payment
+        string payment_status = "NOT_PAID";
         string query2 = "INSERT INTO Tickets (ticket_code, user_id, flight_num, seat_class, ticket_price,payment) VALUES (?, ?, ?, ?, ?,?)";
         if (sqlite3_prepare_v2(db, query2.c_str(), -1, &stmt, nullptr) == SQLITE_OK)
         {
@@ -637,13 +660,14 @@ void book_flight(int client_socket, const string flight_num, const string seat_c
             sqlite3_bind_text(stmt, 3, flight_num.c_str(), -1, SQLITE_STATIC);
             sqlite3_bind_text(stmt, 4, seat_class.c_str(), -1, SQLITE_STATIC);
             sqlite3_bind_double(stmt, 5, ticket_price);
-            sqlite3_bind_text(stmt,6, )
-
+            sqlite3_bind_text(stmt, 6, payment_status.c_str(), -1, SQLITE_STATIC);
+        
             if (sqlite3_step(stmt) == SQLITE_DONE)
             {
                 cout << "Finished booking\n";
                 string success_book = "Y_book/";
                 success_book += ticket_code;
+                success_book += to_string(ticket_price) + "VND";
                 send(client_socket, success_book.c_str(), success_book.length(), 0);
 
                 update_seat_count(db, flight_num, seat_class, -1);
@@ -667,9 +691,9 @@ void book_flight(int client_socket, const string flight_num, const string seat_c
     }
 }
 void handle_payment(int client_socket, const string ticket_code){
-    send(client_socket,"Do you want to make payment?",strlen("Do you want to make payment?"),0);
-    
+
 }
+
 void cancel_flight(int client_socket, const string ticket_code)
 {
     sqlite3_stmt *stmt;
@@ -725,12 +749,200 @@ void cancel_flight(int client_socket, const string ticket_code)
     sqlite3_finalize(stmt);
 }
 
-void connect_client(int client_socket)
+void change_flight(int client_socket, const string ticket_code, const string flight_num_new, const string seat_class_new, string cur_user)
 {
+    string change_success="Y_change/";
+    sqlite3_stmt *stmt;
+    string flight_num, seat_class;
+    
+    string can_query = "SELECT flight_num, seat_class FROM Tickets WHERE ticket_code = ?";
+    if (sqlite3_prepare_v2(db, can_query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        cerr << "Error preparing query: " << sqlite3_errmsg(db) << endl;
+        send(client_socket, "N_cancel_err", strlen("N_cancel_err"), 0);
+        return;
+    }
+    
+    sqlite3_bind_text(stmt, 1, ticket_code.c_str(), -1, SQLITE_STATIC);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        flight_num = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
+        seat_class = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
+    }
+    else
+    {
+        cerr << "Ticket not found" << endl;
+        send(client_socket, "N_found_change", strlen("N_found_change"), 0);
+        sqlite3_finalize(stmt);
+        return;
+    }
+    sqlite3_finalize(stmt);
+
+    can_query = "DELETE FROM Tickets WHERE ticket_code = ?";
+    if (sqlite3_prepare_v2(db, can_query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        cerr << "Error preparing delete query: " << sqlite3_errmsg(db) << endl;
+        send(client_socket, "N_cancel_err", strlen("N_cancel_err"), 0);
+        return;
+    }
+
+    sqlite3_bind_text(stmt, 1, ticket_code.c_str(), -1, SQLITE_STATIC);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+    {
+        cerr << "Error deleting ticket: " << sqlite3_errmsg(db) << endl;
+        send(client_socket, "N_cancel_err", strlen("N_cancel_err"), 0);
+        return;
+    }
+
+    cout << "Ticket cancelled successfully" << endl;
+    change_success += ticket_code;
+
+    update_seat_count(db, flight_num, seat_class, 1); 
+    sqlite3_finalize(stmt);
+
+    int ticket_price = 0;
+    string query_price = "SELECT ";
+    query_price += (seat_class == "A" ? "price_A" : "price_B");
+    query_price += " FROM Flights WHERE flight_num = ?";
+
+    sqlite3_prepare_v2(db, query_price.c_str(), -1, &stmt, nullptr);
+    sqlite3_bind_text(stmt, 1, flight_num.c_str(), -1, SQLITE_STATIC);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        ticket_price = sqlite3_column_int(stmt, 0);
+    }
+    else
+    {
+        cerr << "Failed to retrieve ticket price." << endl;
+    }   
+
+    string query_seat;
+    int available_seats;
+
+    if (seat_class == "A") {
+        query_seat = "SELECT seat_class_A FROM Flights WHERE flight_num = ?";
+    } else if (seat_class == "B") {
+        query_seat = "SELECT seat_class_B FROM Flights WHERE flight_num = ?";
+    } else {
+        send(client_socket, "N_invalid_class", strlen("N_invalid_class"), 0);
+        return;
+    }
+
+    if (sqlite3_prepare_v2(db, query_seat.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        cerr << "Error preparing query: " << sqlite3_errmsg(db) << endl;
+        return;
+    }
+
+    sqlite3_bind_text(stmt, 1, flight_num.c_str(), -1, SQLITE_STATIC);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        available_seats = sqlite3_column_int(stmt, 0);
+    } else {
+        send(client_socket, "N_flight_not_found", strlen("N_flight_not_found"), 0);
+        sqlite3_finalize(stmt);
+        return;
+    }
+    sqlite3_finalize(stmt);
+    cout << "Seat available: " << available_seats<<endl;
+    if (available_seats == 0) {
+        string N_book_avail="N_no_seats/" + seat_class;
+        send(client_socket, N_book_avail.c_str(), N_book_avail.length(), 0);
+        return;
+    }
+    string book_query = "SELECT flight_num FROM Flights WHERE flight_num = ?";
+    if (sqlite3_prepare_v2(db, book_query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        cerr << "Error preparing query: " << sqlite3_errmsg(db) << endl;
+        send(client_socket, "N_book", strlen("N_book"), 0);
+        return;
+    }
+    sqlite3_bind_text(stmt, 1, flight_num.c_str(), -1, SQLITE_STATIC);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        sqlite3_finalize(stmt); 
+
+        int user_id = -1;
+        string query1 = "SELECT user_id FROM Users WHERE username = ?";
+        if (sqlite3_prepare_v2(db, query1.c_str(), -1, &stmt, nullptr) == SQLITE_OK)
+        {
+            sqlite3_bind_text(stmt, 1, cur_user.c_str(), -1, SQLITE_STATIC);
+
+            if (sqlite3_step(stmt) == SQLITE_ROW)
+            {
+                user_id = sqlite3_column_int(stmt, 0);
+            }
+            else
+            {
+                cerr << "No user found" << endl;
+                send(client_socket, "N_book", strlen("N_book"), 0);
+                sqlite3_finalize(stmt);
+                return;
+            }
+            sqlite3_finalize(stmt);
+        }
+        else
+        {
+            cerr << "Error preparing user query: " << sqlite3_errmsg(db) << endl;
+            send(client_socket, "N_book", strlen("N_book"), 0);
+            sqlite3_finalize(stmt);
+            return;
+        }
+
+        string ticket_code = generate_ticket_code();
+
+        //Payment
+        string payment_status = "NOT_PAID";
+        string query2 = "INSERT INTO Tickets (ticket_code, user_id, flight_num, seat_class, ticket_price,payment) VALUES (?, ?, ?, ?, ?,?)";
+        if (sqlite3_prepare_v2(db, query2.c_str(), -1, &stmt, nullptr) == SQLITE_OK)
+        {
+            sqlite3_bind_text(stmt, 1, ticket_code.c_str(), -1, SQLITE_STATIC);
+            sqlite3_bind_int(stmt, 2, user_id);
+            sqlite3_bind_text(stmt, 3, flight_num.c_str(), -1, SQLITE_STATIC);
+            sqlite3_bind_text(stmt, 4, seat_class.c_str(), -1, SQLITE_STATIC);
+            sqlite3_bind_double(stmt, 5, ticket_price);
+            sqlite3_bind_text(stmt, 6, payment_status.c_str(), -1, SQLITE_STATIC);
+        
+            if (sqlite3_step(stmt) == SQLITE_DONE)
+            {
+                cout << "Finished booking\n";
+                change_success += ticket_code;
+                change_success += to_string(ticket_price) + "VND";
+                send(client_socket, change_success.c_str(), change_success.length(), 0);
+                update_seat_count(db, flight_num, seat_class, -1);
+            }
+            else
+            {
+                cerr << "Error inserting ticket data: " << sqlite3_errmsg(db) << endl;
+                send(client_socket, "N_book", strlen("N_book"), 0);
+            }
+        }
+        else
+        {
+            cerr << "Error preparing insert query: " << sqlite3_errmsg(db) << endl;
+            send(client_socket, "N_book", strlen("N_book"), 0);
+        }
+        sqlite3_finalize(stmt);
+    }
+    else
+    {
+        send(client_socket, "N_book", strlen("N_book"), 0);
+    }
+}
+
+    	
+void connect_client(int client_socket)
+{    
+    string cur_user;
     char buffer[BUFFER_SIZE];
     int bytes_received;
 
-    cout << "Connected to client" << endl;
+    cout << "Connected to client"<< endl;
 
     while (true)
     {
@@ -759,7 +971,7 @@ void connect_client(int client_socket)
         string args = received.substr(space_pos + 1);
 
         if (command == "login")
-        {
+        {   
             size_t comma_pos = args.find(',');
             if (comma_pos == string::npos)
             {
@@ -771,7 +983,7 @@ void connect_client(int client_socket)
             string username = args.substr(0, comma_pos);
             string password = args.substr(comma_pos + 1);
             cout << "Login requested" << endl;
-            log_in(client_socket, username, password);
+            log_in(client_socket, username, password, cur_user);
         }
         else if (command == "register")
         {
@@ -787,14 +999,13 @@ void connect_client(int client_socket)
             string password = args.substr(comma_pos + 1);
 
             cout << "Registration requested" << endl;
-            register_user(client_socket, username, password);
+            register_user(client_socket, username, password, cur_user);
         }
     }
 
     cout << "Connection closed" << endl;
     close(client_socket);
 }
-
 void update_seat_count(sqlite3 *db, const string &flight_num, const string &seat_class, int adjustment)
 {
     sqlite3_stmt *stmt;
@@ -831,7 +1042,7 @@ void update_seat_count(sqlite3 *db, const string &flight_num, const string &seat
 }
 
 int main()
-{
+{   
     int server_socket, client_socket;
     struct sockaddr_in server_addr, client_addr;
     socklen_t client_len = sizeof(client_addr);
@@ -880,9 +1091,10 @@ int main()
             cerr << "Error accepting client connection" << endl;
             continue;
         }
-
-        thread client_thread(connect_client, client_socket);
-        client_thread.detach();
+    string client_ip = inet_ntoa(client_addr.sin_addr);
+    cout << "Received request from " << client_ip << endl;
+    thread client_thread(connect_client, client_socket);
+    client_thread.detach();
     }
 
     close(server_socket);

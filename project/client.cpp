@@ -2,12 +2,12 @@
 
 int main()
 {
-    const char *host = "127.0.0.1"; // Default for local test
+    const char *host ="127.0.0.1"; // Default for local test
 
     struct sockaddr_in server_addr;
     int client_socket;
     Role cur_role = Role::none;
-    print_main_menu();
+    print_main_menu();  
     try
     {
         client_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -55,6 +55,7 @@ int main()
             if (message == "N_format")
             {
                 std::cout << "Invalid format. Please choose a valid option!" << endl;
+                print_main_menu();
             }
             else if (message == "Y_admin")
             {
@@ -109,6 +110,7 @@ int main()
             else if (message == "N_login")
             {
                 std::cout << "Please check your username and password!" << endl;
+                print_main_menu();
             }
             else if (message == "Y_register")
             {
@@ -155,9 +157,12 @@ int main()
             }
             else if (message.find("Y_book/") == 0)
             {
-                string ticket_code = message.substr(7);
+                string ticket_code = message.substr(7,6);
+                string ticket_price1 = message.substr(13,3);
+                string ticket_price2 = message.substr(16,6);
                 std::cout << "You've booked successfully\n";
                 std::cout << "Your ticket code: " << ticket_code << endl;
+                std::cout << "You will have to pay "<< ticket_price1<<"."<<ticket_price2 << endl;
                 print_functions();
             }
             else if (message == "N_book")
@@ -220,9 +225,13 @@ int main()
                 string message_no_seats= message.substr(11);
                 std::cout << "No seat class " << message_no_seats<< " available"<<endl; 
                 print_functions();
+            }else if(message.find("Y_change/")==0){
+                std::cout<< "Cancelled ticket "<< message.substr(9,6)<<endl;
+                std::cout<<"Your new ticket code is " << message.substr(15,6)<<endl;
+                std::cout<<"You will have to pay: " << message.substr(21,3) << "." <<message.substr(24,6)<<endl;
+                print_functions();
             }
         }
-
         close(client_socket);
         std::cout << "Closed the connection." << endl;
     }
