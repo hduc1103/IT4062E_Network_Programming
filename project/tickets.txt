@@ -3,52 +3,25 @@ Flight Number: ABC123
 Ticket Code: TCKT123
 Departure Point: CaMau
 Destination Point: Vinh
-Departure Date: 2023-01-15
-Return Date: 2023-01-20
+Departure Date: 2023-01-15 08:00
+Return Date: 2023-01-20 19:30
 Seat Class: A
 ---------------------
 ---------------------
 Flight Number: ABC123
-Ticket Code: NWL535
+Ticket Code: QAZ463
 Departure Point: CaMau
 Destination Point: Vinh
-Departure Date: 2023-01-15
-Return Date: 2023-01-20
+Departure Date: 2023-01-15 08:00
+Return Date: 2023-01-20 19:30
 Seat Class: A
 ---------------------
 ---------------------
 Flight Number: ABC123
-Ticket Code: NWL535
+Ticket Code: DBB173
 Departure Point: CaMau
 Destination Point: Vinh
-Departure Date: 2023-01-15
-Return Date: 2023-01-20
-Seat Class: A
----------------------
----------------------
-Flight Number: ABC123
-Ticket Code: RXU273
-Departure Point: CaMau
-Destination Point: Vinh
-Departure Date: 2023-01-15
-Return Date: 2023-01-20
-Seat Class: A
----------------------
----------------------
-Flight Number: ABC123
-Ticket Code: USJ254
-Departure Point: CaMau
-Destination Point: Vinh
-Departure Date: 2023-01-15
-Return Date: 2023-01-20
-Seat Class: B
----------------------
----------------------
-Flight Number: ABC123
-Ticket Code: OPS109
-Departure Point: CaMau
-Destination Point: Vinh
-Departure Date: 2023-01-15
-Return Date: 2023-01-20
+Departure Date: 2023-01-15 08:00
+Return Date: 2023-01-20 19:30
 Seat Class: A
 ---------------------

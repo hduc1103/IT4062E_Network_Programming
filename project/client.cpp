@@ -1,8 +1,11 @@
 #include "client.h"
 
 int main()
-{
-    const char *host ="127.0.0.1"; // Default for local test
+{   
+    //   char host[100]; // Buffer to store the server IP address
+    // cout << "Enter server IP address: ";
+    // cin.getline(host, sizeof(host));
+    const char *host ="192.168.44.100"; // Default for local test
 
     struct sockaddr_in server_addr;
     int client_socket;
@@ -121,6 +124,7 @@ int main()
             else if (message == "N_register")
             {
                 std::cout << "Your username has already existed!" << endl;
+                print_main_menu();
             }
             else if (message == "N_in")
             {

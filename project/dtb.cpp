@@ -159,7 +159,7 @@ int main()
 
 const char *insertTicketsSQL = "INSERT INTO Tickets (ticket_code, user_id, flight_num, seat_class, ticket_price, payment) VALUES (?, ?, ?, ?, ?, ?)";
 
-   vector<tuple<string, int, string, string, double, string>> tickets_data = {
+   vector<tuple<string, int, string, string, int, string>> tickets_data = {
     {"TCKT123", 1, "ABC123", "A", 300000, "PAID"},
     {"TCKT456", 2, "DEF456", "B", 250000, "NOT_PAID"}, 
     {"TCKT789", 3, "GHI789", "A", 280000, "PAID"}, 
