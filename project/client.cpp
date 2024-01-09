@@ -5,7 +5,7 @@ int main()
     //   char host[100]; // Buffer to store the server IP address
     // cout << "Enter server IP address: ";
     // cin.getline(host, sizeof(host));
-    const char *host ="192.168.44.100"; // Default for local test
+    const char *host ="192.168.44.101"; // Default for local test
 
     struct sockaddr_in server_addr;
     int client_socket;
