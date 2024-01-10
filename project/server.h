@@ -37,7 +37,8 @@ std::map<std::string, int> userSocketMap; // client socket, user_id
 std::mutex mapMutex; 
 
 struct Flights
-{
+{   
+    string company;
     string flight_num;
     int num_A;
     int num_B;

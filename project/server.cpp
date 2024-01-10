@@ -62,6 +62,85 @@ int main()
     close(server_socket);
     return 0;
 }
+void connect_client(int client_socket)
+{
+    string cur_user;
+    char buffer[BUFFER_SIZE];
+    int bytes_received;
+
+    if (sqlite3_open("flight_database.db", &db) != SQLITE_OK)
+    {
+        cerr << "Error opening database: " << sqlite3_errmsg(db) << endl;
+        close(client_socket);
+        return;
+    }
+
+    cout << "Connected to client" << endl;
+
+    while (true)
+    {
+        bytes_received = recv(client_socket, buffer, BUFFER_SIZE, 0);
+        if (bytes_received <= 0)
+        {
+            break;
+        }
+        buffer[bytes_received] = '\0';
+
+        string received(buffer);
+
+        if (received == "exit")
+        {
+            break;
+        }
+        size_t space_pos = received.find(' ');
+        if (space_pos == string::npos)
+        {
+            cout << "Invalid format" << endl;
+            send(client_socket, "N_format", strlen("N_format"), 0);
+            continue;
+        }
+
+        string command = lower(received.substr(0, space_pos));
+        string args = received.substr(space_pos + 1);
+
+        if (command == "login")
+        {
+            size_t comma_pos = args.find(',');
+            if (comma_pos == string::npos)
+            {
+                cout << "Invalid format" << endl;
+                send(client_socket, "N_format", strlen("N_format"), 0);
+                continue;
+            }
+
+            string username = args.substr(0, comma_pos);
+            string password = args.substr(comma_pos + 1);
+            cout << "Login requested" << endl;
+            log_in(client_socket, username, password, cur_user);
+        }
+        else if (command == "register")
+        {
+            size_t comma_pos = args.find(',');
+            if (comma_pos == string::npos)
+            {
+                cout << "Invalid format" << endl;
+                send(client_socket, "N_format", strlen("N_format"), 0);
+                continue;
+            }
+
+            string username = args.substr(0, comma_pos);
+            string password = args.substr(comma_pos + 1);
+
+            cout << "Registration requested" << endl;
+            register_user(client_socket, username, password, cur_user);
+        }
+    }
+
+    cout << "Connection closed" << endl;
+    sqlite3_close(db);
+
+    close(client_socket);
+}
 
 void log_in(int client_socket, const string &username, const string &password, string cur_user) // Log in function
 {
@@ -196,20 +275,21 @@ void admin_mode(int client_socket)
         {
             string add_message = received.substr(11);
             vector<string> insert_params = split(add_message, ',');
-            if (insert_params.size() == 9)
+            if (insert_params.size() == 10)
             {
                 Flights newFlight;
                 try
-                {
-                    newFlight.flight_num = insert_params[0];
-                    newFlight.num_A = stoi(insert_params[1]);
-                    newFlight.num_B = stoi(insert_params[2]);
-                    newFlight.price_A = stoi(insert_params[3]);
-                    newFlight.price_B = stoi(insert_params[4]);
-                    newFlight.departure_point = insert_params[5];
-                    newFlight.destination_point = insert_params[6];
-                    newFlight.departure_date = insert_params[7];
-                    newFlight.return_date = insert_params[8];
+                {   
+                    newFlight.company = insert_params[0];
+                    newFlight.flight_num = insert_params[1];
+                    newFlight.num_A = stoi(insert_params[2]);
+                    newFlight.num_B = stoi(insert_params[3]);
+                    newFlight.price_A = stoi(insert_params[4]);
+                    newFlight.price_B = stoi(insert_params[5]);
+                    newFlight.departure_point = insert_params[6];
+                    newFlight.destination_point = insert_params[7];
+                    newFlight.departure_date = insert_params[8];
+                    newFlight.return_date = insert_params[9];
                 }
                 catch (const std::invalid_argument &ia)
                 {
@@ -234,7 +314,7 @@ void admin_mode(int client_socket)
                 }
                 sqlite3_finalize(stmt);
 
-                string insert_query = "INSERT INTO Flights (flight_num, seat_class_A,seat_class_B,price_A,price_B, departure_point, destination_point, departure_date, return_date) VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
+                string insert_query = "INSERT INTO Flights (company, flight_num, seat_class_A,seat_class_B,price_A,price_B, departure_point, destination_point, departure_date, return_date) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?)";
                 if (sqlite3_prepare_v2(db, insert_query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
                 {
                     cerr << "Error preparing query: " << sqlite3_errmsg(db) << endl;
@@ -243,15 +323,16 @@ void admin_mode(int client_socket)
                 }
 
                 // Binding parameters to avoid SQL injection
-                sqlite3_bind_text(stmt, 1, newFlight.flight_num.c_str(), -1, SQLITE_STATIC);
-                sqlite3_bind_int(stmt, 2, newFlight.num_A);
-                sqlite3_bind_int(stmt, 3, newFlight.num_B);
-                sqlite3_bind_int(stmt, 4, newFlight.price_A);
-                sqlite3_bind_int(stmt, 5, newFlight.price_B);
-                sqlite3_bind_text(stmt, 6, newFlight.departure_point.c_str(), -1, SQLITE_STATIC);
-                sqlite3_bind_text(stmt, 7, newFlight.destination_point.c_str(), -1, SQLITE_STATIC);
-                sqlite3_bind_text(stmt, 8, newFlight.departure_date.c_str(), -1, SQLITE_STATIC);
-                sqlite3_bind_text(stmt, 9, newFlight.return_date.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_text(stmt, 1, newFlight.company.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_text(stmt, 2, newFlight.flight_num.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_int(stmt, 3, newFlight.num_A);
+                sqlite3_bind_int(stmt, 4, newFlight.num_B);
+                sqlite3_bind_int(stmt, 5, newFlight.price_A);
+                sqlite3_bind_int(stmt, 6, newFlight.price_B);
+                sqlite3_bind_text(stmt, 7, newFlight.departure_point.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_text(stmt, 8, newFlight.destination_point.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_text(stmt, 9, newFlight.departure_date.c_str(), -1, SQLITE_STATIC);
+                sqlite3_bind_text(stmt, 10, newFlight.return_date.c_str(), -1, SQLITE_STATIC);
 
                 if (sqlite3_step(stmt) != SQLITE_DONE)
                 {
@@ -396,8 +477,8 @@ void functions(int client_socket, string cur_user)
             return;
         }
         vector<string> type1 = split(received, ' ');
-
-        if (((lower(type1[0]).compare("search") != 0 && type1.size() < 2) && (lower(type1[0]).compare("book") != 0 && type1.size() < 2) && lower(type1[0]).compare("view") != 0) && lower(type1[0]).compare("print") != 0 && lower(type1[0]).compare("pay") != 0 && lower(type1[0]).compare("change") != 0)
+        if (lower(type1[0]).compare("search") != 0 && lower(type1[0]).compare("book") != 0 && lower(type1[0]).compare("view") != 0 && lower(type1[0]).compare("print") != 0 && lower(type1[0]).compare("pay") != 0 && lower(type1[0]).compare("change") != 0)
+        // if (((lower(type1[0]).compare("search") != 0 && type1.size() < 2) && (lower(type1[0]).compare("book") != 0 && type1.size() < 2) && lower(type1[0]).compare("view") != 0) && lower(type1[0]).compare("print") != 0 && lower(type1[0]).compare("pay") != 0 && lower(type1[0]).compare("change") != 0)
         {
             cout << "Invalid format" << endl;
             send(client_socket, "N_in", strlen("N_in"), 0);
@@ -443,7 +524,7 @@ void functions(int client_socket, string cur_user)
         {
             cerr << "view\n";
             sqlite3_stmt *stmt;
-            string query = "SELECT T.ticket_code, T.flight_num, T.seat_class, T.ticket_price, F.departure_date, F.return_date, F.departure_point, F.destination_point "
+            string query = "SELECT T.ticket_code, T.flight_num, T.seat_class, T.ticket_price,F.company, F.departure_date, F.return_date, F.departure_point, F.destination_point "
                            "FROM Tickets T "
                            "JOIN Flights F ON T.flight_num = F.flight_num "
                            "JOIN Users U ON T.user_id = U.user_id "
@@ -470,10 +551,11 @@ void functions(int client_socket, string cur_user)
                 ticket.flight_num = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
                 ticket.seat_class = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
                 ticket.ticket_price = sqlite3_column_int(stmt, 3);
-                flight.departure_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 4));
-                flight.return_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 5));
-                flight.departure_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 6));
-                flight.destination_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 7));
+                flight.company = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 4));
+                flight.departure_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 5));
+                flight.return_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 6));
+                flight.departure_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 7));
+                flight.destination_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 8));
 
                 stringstream ss;
                 ss << ticket.ticket_price;
@@ -482,6 +564,7 @@ void functions(int client_socket, string cur_user)
 
                 result_str += ticket.flight_num + ",";
                 result_str += ticket.ticket_code + ",";
+                result_str += flight.company + ",";
                 result_str += flight.departure_point + ',';
                 result_str += flight.destination_point + ',';
                 result_str += flight.departure_date + ",";
@@ -520,7 +603,7 @@ void functions(int client_socket, string cur_user)
         else if (lower(type1[0]) == "print")
         {
             sqlite3_stmt *stmt;
-            string query = "SELECT T.ticket_code, T.flight_num, T.seat_class, T.ticket_price, F.departure_date, F.return_date, F.departure_point, F.destination_point "
+            string query = "SELECT T.ticket_code, T.flight_num, T.seat_class, T.ticket_price, F.company, F.departure_date, F.return_date, F.departure_point, F.destination_point "
                            "FROM Tickets T "
                            "JOIN Flights F ON T.flight_num = F.flight_num "
                            "JOIN Users U ON T.user_id = U.user_id "
@@ -547,10 +630,11 @@ void functions(int client_socket, string cur_user)
                 ticket.flight_num = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
                 ticket.seat_class = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
                 ticket.ticket_price = sqlite3_column_int(stmt, 3);
-                flight.departure_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 4));
-                flight.return_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 5));
-                flight.departure_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 6));
-                flight.destination_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 7));
+                flight.company = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 4));
+                flight.departure_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 5));
+                flight.return_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 6));
+                flight.departure_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 7));
+                flight.destination_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 8));
 
                 stringstream ss;
                 ss << fixed << setprecision(2) << ticket.ticket_price;
@@ -558,6 +642,7 @@ void functions(int client_socket, string cur_user)
 
                 result_str += ticket.flight_num + ",";
                 result_str += ticket.ticket_code + ",";
+                result_str += flight.company + ",";
                 result_str += flight.departure_point + ',';
                 result_str += flight.destination_point + ',';
                 result_str += flight.departure_date + ",";
@@ -611,16 +696,18 @@ void search_flight(int client_socket, const string &departure_point, const strin
     {
         found = true;
         Flights flight;
-        flight.flight_num = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
-        flight.num_A = sqlite3_column_int(stmt, 1);
-        flight.num_B = sqlite3_column_int(stmt, 2);
-        flight.price_A = sqlite3_column_int(stmt, 3);
-        flight.price_B = sqlite3_column_int(stmt, 4);
-        flight.departure_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 5));
-        flight.destination_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 6));
-        flight.departure_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 7));
-        flight.return_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 8));
-
+        flight.company = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
+        flight.flight_num = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
+        flight.num_A = sqlite3_column_int(stmt, 2);
+        flight.num_B = sqlite3_column_int(stmt, 3);
+        flight.price_A = sqlite3_column_int(stmt, 4);
+        flight.price_B = sqlite3_column_int(stmt, 5);
+        flight.departure_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 6));
+        flight.destination_point = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 7));
+        flight.departure_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 8));
+        flight.return_date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 9));
+        
+        result_str += flight.company + ",";
         result_str += flight.flight_num + ",";
         result_str += to_string(flight.num_A) + ",";
         result_str += to_string(flight.num_B) + ",";
@@ -961,7 +1048,7 @@ void change_flight(int client_socket, const string old_ticket_code, const string
         send(client_socket, N_book_avail.c_str(), N_book_avail.length(), 0);
         return;
     }
-    
+
     string book_query = "SELECT flight_num FROM Flights WHERE flight_num = ?";
     if (sqlite3_prepare_v2(db, book_query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
@@ -1041,86 +1128,6 @@ void change_flight(int client_socket, const string old_ticket_code, const string
     {
         send(client_socket, "N_book", strlen("N_book"), 0);
     }
-}
-
-void connect_client(int client_socket)
-{
-    string cur_user;
-    char buffer[BUFFER_SIZE];
-    int bytes_received;
-
-    if (sqlite3_open("flight_database.db", &db) != SQLITE_OK)
-    {
-        cerr << "Error opening database: " << sqlite3_errmsg(db) << endl;
-        close(client_socket);
-        return;
-    }
-
-    cout << "Connected to client" << endl;
-
-    while (true)
-    {
-        bytes_received = recv(client_socket, buffer, BUFFER_SIZE, 0);
-        if (bytes_received <= 0)
-        {
-            break;
-        }
-        buffer[bytes_received] = '\0';
-
-        string received(buffer);
-
-        if (received == "exit")
-        {
-            break;
-        }
-        size_t space_pos = received.find(' ');
-        if (space_pos == string::npos)
-        {
-            cout << "Invalid format" << endl;
-            send(client_socket, "N_format", strlen("N_format"), 0);
-            continue;
-        }
-
-        string command = lower(received.substr(0, space_pos));
-        string args = received.substr(space_pos + 1);
-
-        if (command == "login")
-        {
-            size_t comma_pos = args.find(',');
-            if (comma_pos == string::npos)
-            {
-                cout << "Invalid format" << endl;
-                send(client_socket, "N_format", strlen("N_format"), 0);
-                continue;
-            }
-
-            string username = args.substr(0, comma_pos);
-            string password = args.substr(comma_pos + 1);
-            cout << "Login requested" << endl;
-            log_in(client_socket, username, password, cur_user);
-        }
-        else if (command == "register")
-        {
-            size_t comma_pos = args.find(',');
-            if (comma_pos == string::npos)
-            {
-                cout << "Invalid format" << endl;
-                send(client_socket, "N_format", strlen("N_format"), 0);
-                continue;
-            }
-
-            string username = args.substr(0, comma_pos);
-            string password = args.substr(comma_pos + 1);
-
-            cout << "Registration requested" << endl;
-            register_user(client_socket, username, password, cur_user);
-        }
-    }
-
-    cout << "Connection closed" << endl;
-    sqlite3_close(db);
-
-    close(client_socket);
 }
 
 void update_seat_count(sqlite3 *db, const string &flight_num, const string &seat_class, int adjustment)

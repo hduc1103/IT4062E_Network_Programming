@@ -9,16 +9,52 @@ Seat Class: A
 ---------------------
 ---------------------
 Flight Number: ABC123
-Ticket Code: QAZ463
+Ticket Code: NXA650
 Departure Point: CaMau
 Destination Point: Vinh
 Departure Date: 2023-01-15 08:00
 Return Date: 2023-01-20 19:30
+Seat Class: B
+---------------------
+---------------------
+Flight Number: GHI789
+Ticket Code: RJD491
+Departure Point: NgheAn
+Destination Point: CaoBang
+Departure Date: 2023-03-05 07:30
+Return Date: 2023-03-10 20:00
 Seat Class: A
 ---------------------
 ---------------------
+Flight Number: GHI789
+Ticket Code: JWV563
+Departure Point: NgheAn
+Destination Point: CaoBang
+Departure Date: 2023-03-05 07:30
+Return Date: 2023-03-10 20:00
+Seat Class: B
+---------------------
+---------------------
+Flight Number: GHI789
+Ticket Code: SOQ889
+Departure Point: NgheAn
+Destination Point: CaoBang
+Departure Date: 2023-03-05 07:30
+Return Date: 2023-03-10 20:00
+Seat Class: A
+---------------------
+---------------------
+Flight Number: HJS383
+Ticket Code: UAS717
+Departure Point: DaNang
+Destination Point: CaoBang
+Departure Date: 2023-11-10 10:45
+Return Date: 2024-02-15 20:22
+Seat Class: B
+---------------------
+---------------------
 Flight Number: ABC123
-Ticket Code: DBB173
+Ticket Code: OIQ018
 Departure Point: CaMau
 Destination Point: Vinh
 Departure Date: 2023-01-15 08:00
