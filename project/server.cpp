@@ -1,6 +1,6 @@
 #include "server.h"
 
-thread_local sqlite3 *db;
+sqlite3 *db;
 
 int main()
 {
@@ -477,7 +477,7 @@ void functions(int client_socket, string cur_user)
             return;
         }
         vector<string> type1 = split(received, ' ');
-        if (lower(type1[0]).compare("search") != 0 && lower(type1[0]).compare("book") != 0 && lower(type1[0]).compare("view") != 0 && lower(type1[0]).compare("print") != 0 && lower(type1[0]).compare("pay") != 0 && lower(type1[0]).compare("change") != 0)
+        if (lower(type1[0]).compare("search") != 0 && lower(type1[0]).compare("book") != 0 && lower(type1[0]).compare("view") != 0&& lower(type1[0]).compare("cancel") != 0 && lower(type1[0]).compare("print") != 0 && lower(type1[0]).compare("pay") != 0 && lower(type1[0]).compare("change") != 0)
         // if (((lower(type1[0]).compare("search") != 0 && type1.size() < 2) && (lower(type1[0]).compare("book") != 0 && type1.size() < 2) && lower(type1[0]).compare("view") != 0) && lower(type1[0]).compare("print") != 0 && lower(type1[0]).compare("pay") != 0 && lower(type1[0]).compare("change") != 0)
         {
             cout << "Invalid format" << endl;
@@ -587,10 +587,9 @@ void functions(int client_socket, string cur_user)
 
         else if (lower(type1[0]) == "cancel")
         {
-            vector<string> cancel_params = split(type1[1], ',');
-            if (cancel_params.size() == 1)
+            if (type1.size() == 2)
             {
-                string ticket_code = cancel_params[0];
+                string ticket_code = type1[1];
                 cancel_flight(client_socket, ticket_code);
             }
             else
