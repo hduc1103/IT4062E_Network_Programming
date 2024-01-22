@@ -64,6 +64,7 @@ struct Ticket
     string flight_num;
     string seat_class;
     double ticket_price;
+    string payment;
 };
 
 vector<string> split(const string &input, char delimiter)
@@ -109,3 +110,4 @@ string generate_ticket_code()
     }
     return ticket_code;
 }
+

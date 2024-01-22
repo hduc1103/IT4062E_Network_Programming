@@ -1,6 +1,6 @@
 Tasks left:
 
-1. Update for change and search (add criterias for search function, change function may need more test)
+1. Update for change and search (add company column for table Flights and add criterias for search function, and change function may need more test)
 2. Log all in server terminal (easy for last)
 3. Notification (on going)
-4. Payment func (need idea)
+4. Modify flights

@@ -71,15 +71,21 @@ enum class Role
 };
 void print_functions()
 {
+    std::cout << "__________________________________________________\n";
     std::cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. View tickets detail\n4. Cancel tickets\n5. Change tickets\n6. Print tickets\n7. Log out\n8. Ticket payment\n9. Exit" << endl;
+    std::cout << "__________________________________________________\n";
     std::cout << "Your message: ";
 }
 void print_admin_menu()
 {
+    std::cout << "__________________________________________________\n";
     std::cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n4. Logout\n5. Exit" << endl;
+    std::cout << "__________________________________________________\n";
     std::cout << "Your message: ";
+
 }
 void print_main_menu()
 {
+    std::cout << "__________________________________________________\n";
     std::cout << "1. Login\n2. Register\n3. Exit\nYour message: ";
 }
