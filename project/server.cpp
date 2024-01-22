@@ -1,6 +1,6 @@
 #include "server.h"
 
-    sqlite3 *db;
+sqlite3 *db;
 
 int main()
 {       
@@ -485,7 +485,11 @@ void functions(int client_socket, string cur_user)
             return;
         }
         vector<string> type1 = split(received, ' ');
+<<<<<<< HEAD
         if (lower(type1[0]).compare("search") != 0 && lower(type1[0]).compare("book") != 0 && lower(type1[0]).compare("view") != 0 && lower(type1[0]).compare("print") != 0 && lower(type1[0]).compare("pay") != 0&& lower(type1[0]).compare("cancel") != 0  && lower(type1[0]).compare("change") != 0)
+=======
+        if (lower(type1[0]).compare("search") != 0 && lower(type1[0]).compare("book") != 0 && lower(type1[0]).compare("view") != 0&& lower(type1[0]).compare("cancel") != 0 && lower(type1[0]).compare("print") != 0 && lower(type1[0]).compare("pay") != 0 && lower(type1[0]).compare("change") != 0)
+>>>>>>> 0b6bee07a8280a87265995c332d268a0e0c34416
         // if (((lower(type1[0]).compare("search") != 0 && type1.size() < 2) && (lower(type1[0]).compare("book") != 0 && type1.size() < 2) && lower(type1[0]).compare("view") != 0) && lower(type1[0]).compare("print") != 0 && lower(type1[0]).compare("pay") != 0 && lower(type1[0]).compare("change") != 0)
         {
             cout << "Invalid format" << endl;
