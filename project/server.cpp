@@ -1,7 +1,6 @@
 #include "server.h"
 
 sqlite3 *db;
-
 int main()
 {
     if (sqlite3_config(SQLITE_CONFIG_MULTITHREAD) != SQLITE_OK)
