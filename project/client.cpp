@@ -6,7 +6,7 @@ int main()
     // cout << "Enter server IP address: ";
     // cin.getline(host, sizeof(host));
     const char *host = "127.0.0.1"; // Default for local test
-    string tmp_noti = "";
+    string tmp_noti = "Notification: ";
 
     struct sockaddr_in server_addr;
     int client_socket;
@@ -58,8 +58,10 @@ int main()
 
             if (message == "N_format")
             {
+               if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 std::cout << "Invalid format. Please choose a valid option!" << endl;
                 print_main_menu();
             }
@@ -141,22 +143,28 @@ int main()
             }
             else if (message == "N_search")
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 std::cout << "Input 2->6 elements for continuing searching" << endl;
                 print_functions();
             }
             else if (message == "N_found")
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 std::cout << "Can't find" << endl;
                 print_functions();
             }
             else if (message.find("Y_found/") == 0)
-            {
+            {   
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 string flight_data = message.substr(8);
                 std::cout << "Flight data:" << endl;
                 size_t pos = 0;
@@ -175,8 +183,10 @@ int main()
             }
             else if (message.find("Y_book/") == 0)
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 string ticket_code = message.substr(7, 6);
                 string ticket_price1 = message.substr(13, 3);
                 string ticket_price2 = message.substr(16, 6);
@@ -188,28 +198,37 @@ int main()
             else if (message == "N_book")
             {
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                if(tmp_noti.length()!=15){
+                std::cout << tmp_noti;
+                tmp_noti = "Notification: ";
+                }
                 std::cout << "Can't find your flight number" << endl;
                 print_functions();
             }
             else if (message == "N_flight_not_found")
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 std::cout << "Can't find your flight number" << endl;
                 print_functions();
             }
             else if (message == "N_book_miss")
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 std::cout << "Input flight number and seatclass for continue booking" << endl;
                 print_functions();
             }
             else if (message.find("Y_view/") == 0)
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 string ticket_data = message.substr(7);
                 std::cout << "Tickets information:" << endl;
                 size_t pos = 0;
@@ -228,8 +247,10 @@ int main()
             }
             else if (message.find("Y_print/") == 0)
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 string ticket_data = message.substr(8);
                 cout << "Saved to tickets.txt" << endl;
                 save_tickets_to_file(ticket_data);
@@ -237,49 +258,67 @@ int main()
             }
             else if (message == "N_cancel_miss")
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 std::cout << "Input your ticket code for cancelling";
                 print_functions();
             }
             else if (message == "N_cancel_err" || message == "N_cancel_notfound")
             {
+               if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 std::cout << "Can't find your ticket" << endl;
                 print_functions();
             }
             else if (message.find("Y_cancel/") == 0)
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 string ticket_code = message.substr(9);
                 std::cout << "You've cancelled ticket: " << ticket_code << endl;
                 print_functions();
             }
             else if (message == "N_invalid_class")
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 std::cout << "Invalid seat class\n";
                 print_functions();
             }
             else if (message.find("N_no_seats/") == 0)
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 string message_no_seats = message.substr(11);
                 std::cout << "No seat class " << message_no_seats << " available" << endl;
                 print_functions();
             }
             else if (message.find("Y_change/") == 0)
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
-                tmp_noti = "";
+                tmp_noti = "Notification: ";
+                }
                 std::cout << "Cancelled ticket " << message.substr(9, 6) << endl;
                 std::cout << "Your new ticket code is " << message.substr(15, 6) << endl;
                 std::cout << "You will have to pay: " << message.substr(21, 3) << "." << message.substr(24, 6) << endl;
                 print_functions();
+            }else if(message== "N_for_change"){
+                std::cout<< tmp_noti;
+                tmp_noti="";
+                std::cout<< "Please recheck the format!\n";
+                print_functions();
+
             }
             else if (message.find("Y_noti_cancelled") == 0)
             {
@@ -289,13 +328,19 @@ int main()
             }
             else if (message == "N_pay")
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
+                tmp_noti = "Notification: ";
+                }
                 std::cout << "Can't find your ticket code\n";
                 print_functions();
             }
             else if (message.find("Y_pay/") == 0)
             {
+                if(tmp_noti.length()!=15){
                 std::cout << tmp_noti;
+                tmp_noti = "Notification: ";
+                }
                 std::cout << "You've paid " << message.substr(6, 3) << "." << message.substr(9, 3) << " VND for ticket " << message.substr(12, 6) << endl;
                 print_functions();
             }

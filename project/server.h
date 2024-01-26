@@ -17,24 +17,8 @@
 #include <mutex>
 
 using namespace std;
-
 #define PORT 3000
 #define BUFFER_SIZE 1024
-
-void log_in(int client_socket, const string &username, const string &password, string cur_user);
-void register_user(int client_socket, const string &username, const string &password, string cur_user);
-void search_flight(int client_socket, const string &departure_point, const string &destination_point);
-void functions(int client_socket, string cur_user);
-void connect_client(int client_socket);
-void admin_mode(int client_socket);
-void book_flight(int client_socket, const string flight_num, const string seat_class, string cur_user);
-void cancel_flight(int client_socket, const string ticket_code);
-void update_seat_count(sqlite3 *db, const string &flight_num, const string &seat_class, int adjustment);
-void handle_payment(int client_socket, const string ticket_code, string payment_status);
-void change_flight(int client_socket, const string ticket_code, const string flight_num_new, const string seat_class_new, string cur_user);
-std::string get_username_from_id(int user_id);
-std::map<std::string, int> userSocketMap; // client socket, user_id
-std::mutex mapMutex; 
 
 struct Flights
 {   
@@ -111,3 +95,17 @@ string generate_ticket_code()
     return ticket_code;
 }
 
+void log_in(int client_socket, const string &username, const string &password);
+void register_user(int client_socket, const string &username, const string &password);
+void search_flight(int client_socket, const string &departure_point, const string &destination_point);
+void functions(int client_socket, const User& user);
+void connect_client(int client_socket);
+void admin_mode(int client_socket);
+void book_flight(int client_socket, const string flight_num, const string seat_class, const User& user);
+void cancel_flight(int client_socket, const string ticket_code);
+void update_seat_count(sqlite3 *db, const string &flight_num, const string &seat_class, int adjustment);
+void handle_payment(int client_socket, const string ticket_code, string payment_status);
+void change_flight(int client_socket, const string ticket_code, const string flight_num_new, const string seat_class_new, const User& user);
+std::string get_username_from_id(int user_id);
+std::map<std::string, int> userSocketMap; // client socket, user_id
+std::mutex mapMutex; 
