@@ -1,0 +1,5 @@
+Tasks left:
+
+1. Update for change and search (add criterias for search function)
+2. Log all in server terminal (easy for last)
+3. Modify flights (admin)

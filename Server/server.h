@@ -106,6 +106,9 @@ void cancel_flight(int client_socket, const string ticket_code);
 void update_seat_count(sqlite3 *db, const string &flight_num, const string &seat_class, int adjustment);
 void handle_payment(int client_socket, const string ticket_code, string payment_status);
 void change_flight(int client_socket, const string ticket_code, const string flight_num_new, const string seat_class_new, const User& user);
+void print_all(int client_socket, const User &user);
+void print_ticket(int client_socket, const string ticket_code, const User &user);
+void handle_view(int client_socket, const User &user);
 std::string get_username_from_id(int user_id);
 std::map<std::string, int> userSocketMap; // client socket, user_id
 std::mutex mapMutex; 

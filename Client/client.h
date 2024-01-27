@@ -13,9 +13,9 @@ using namespace std;
 #define SERV_PORT 3000
 #define BUFFER_SIZE 1024
 
-void save_tickets_to_file(const string &ticket_data)
-{
-    ofstream file("tickets.txt");
+void save_all_tickets_to_file(const string &ticket_data)
+{   
+    ofstream file("Ticket/All_tickets.txt");
 
     if (!file.is_open())
     {
@@ -49,7 +49,39 @@ void save_tickets_to_file(const string &ticket_data)
     }
 
     file.close();
-    cout << "Ticket information saved to tickets.txt" << endl;
+    cout << "Ticket information saved to Ticket/All_tickets.txt" << endl;
+}
+
+void save_tickets_to_file(const string &ticket_data, string ticket_code)
+{
+    string filename = ticket_code + ".txt";
+    string file_folder = "Ticket/" + filename;
+    ofstream file(file_folder);
+
+    if (!file.is_open())
+    {
+        cerr << "Failed to open file for writing." << endl;
+        return;
+    }
+
+    file << "---------------------" << endl;
+    const char *titles[] = {"Flight Number: ", "Ticket Code: ", "Departure Point: ", "Destination Point: ", "Departure Date: ", "Return Date: ", "Seat Class: ", "Ticket Price: "};
+    size_t start = 0, end;
+    int field_index = 0;
+    while ((end = ticket_data.find(',', start)) != string::npos)
+    {
+        string field = ticket_data.substr(start, end - start);
+        file << titles[field_index++] << field << endl; // Writes each field with a title
+        start = end + 1;
+    }
+    if (field_index < 8) {
+        file << titles[field_index] << ticket_data.substr(start) << endl;
+    }
+
+    file << "---------------------" << endl;
+
+    file.close();
+    cout << "Ticket information saved to " << file_folder << endl;
 }
 
 string lower(const string &input)
@@ -72,7 +104,7 @@ enum class Role
 void print_functions()
 {
     std::cout << "__________________________________________________\n";
-    std::cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. View tickets detail\n4. Cancel tickets\n5. Change tickets\n6. Print tickets\n7. Log out\n8. Ticket payment\n9. Exit" << endl;
+    std::cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. View tickets detail\n4. Cancel tickets\n5. Change tickets\n6. Print tickets\n7. Ticket payment\n8. Log out\n9. Exit" << endl;
     std::cout << "__________________________________________________\n";
     std::cout << "Your message: ";
 }
