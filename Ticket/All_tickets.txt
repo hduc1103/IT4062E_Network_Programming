@@ -69,28 +69,18 @@ Seat Class: 2023-02-15 18:15
 Ticket Price: B
 ---------------------
 ---------------------
-Flight Number: ABC123
-Ticket Code: VLL246
-Departure Point: VietJettAir
-Destination Point: CaMau
-Departure Date: Vinh
-Return Date: 2023-01-15 08:00
-Seat Class: 2023-01-20 19:30
-Ticket Price: A
----------------------
----------------------
-Flight Number: ABC123
-Ticket Code: PCD050
-Departure Point: VietJettAir
-Destination Point: CaMau
-Departure Date: Vinh
-Return Date: 2023-01-15 08:00
-Seat Class: 2023-01-20 19:30
+Flight Number: DEF456
+Ticket Code: LPK310
+Departure Point: BambooAirWay
+Destination Point: HaNoi
+Departure Date: HoChiMinh
+Return Date: 2023-02-10 09:45
+Seat Class: 2023-02-15 18:15
 Ticket Price: B
 ---------------------
 ---------------------
 Flight Number: ABC123
-Ticket Code: MBU054
+Ticket Code: ELP895
 Departure Point: VietJettAir
 Destination Point: CaMau
 Departure Date: Vinh
