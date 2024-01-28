@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h> 
+#include <arpa/inet.h>
 #include <sqlite3.h>
 #include <cstring>
 #include <vector>
@@ -21,7 +21,7 @@ using namespace std;
 #define BUFFER_SIZE 1024
 
 struct Flights
-{   
+{
     string company;
     string flight_num;
     int num_A;
@@ -97,18 +97,26 @@ string generate_ticket_code()
 
 void log_in(int client_socket, const string &username, const string &password);
 void register_user(int client_socket, const string &username, const string &password);
-void search_flight(int client_socket, const string &departure_point, const string &destination_point);
-void functions(int client_socket, const User& user);
+void search_flight1(int client_socket, const string &departure_point, const string &destination_point);
+void search_flight2(int client_socket, const string &departure_point, const string &destination_point, const string &departure_date);
+void search_flight3(int client_socket, const string &company, const string &departure_point, const string &destination_point);
+void search_flight4(int client_socket, const string &departure_point, const string &destination_point, const string &departure_date, const string &return_date);
+void search_flight5(int client_socket, const string &company, const string &departure_point, const string &destination_point, const string &departure_date, const string &return_date);
+void functions(int client_socket, const User &user);
 void connect_client(int client_socket);
 void admin_mode(int client_socket);
-void book_flight(int client_socket, const string flight_num, const string seat_class, const User& user);
+void book_flight(int client_socket, const string flight_num, const string seat_class, const User &user);
 void cancel_flight(int client_socket, const string ticket_code);
 void update_seat_count(sqlite3 *db, const string &flight_num, const string &seat_class, int adjustment);
 void handle_payment(int client_socket, const string ticket_code, string payment_status);
-void change_flight(int client_socket, const string ticket_code, const string flight_num_new, const string seat_class_new, const User& user);
+void change_flight(int client_socket, const string ticket_code, const string flight_num_new, const string seat_class_new, const User &user);
 void print_all(int client_socket, const User &user);
 void print_ticket(int client_socket, const string ticket_code, const User &user);
 void handle_view(int client_socket, const User &user);
+bool flight_num_exists(const string &flight_num);
+void update_flight1(int client_socket, const string &flight_num, const string &new_departure_date);
+void update_flight2(int client_socket, string &flight_num, const string &new_return_date);
+void update_flight3(int client_socket, string &flight_num, const string &new_departure_date, const string &new_return_date);
 std::string get_username_from_id(int user_id);
 std::map<std::string, int> userSocketMap; // client socket, user_id
-std::mutex mapMutex; 
+std::mutex mapMutex;

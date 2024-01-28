@@ -1,0 +1,4 @@
+Tasks left:
+
+1. Log all in server terminal (easy for last)
+2. Notification
