@@ -1,90 +1,24 @@
 ---------------------
 Flight Number: ABC123
 Ticket Code: TCKT123
-Departure Point: VietJettAir
-Destination Point: CaMau
-Departure Date: Vinh
-Return Date: 2023-01-15 08:00
-Seat Class: 2023-01-20 19:30
-Ticket Price: A
----------------------
----------------------
-Flight Number: ABC123
-Ticket Code: QFA137
-Departure Point: VietJettAir
-Destination Point: CaMau
-Departure Date: Vinh
-Return Date: 2023-01-15 08:00
-Seat Class: 2023-01-20 19:30
-Ticket Price: A
+Company:VietJettAir
+Departure Point: CaMau
+Destination Point: Vinh
+Departure Date: 2023-01-15 08:00
+Return Date: 2023-01-20 19:30
+Seat Class: A
+Ticket Price: 300.000VND
+Payment: PAID
 ---------------------
 ---------------------
 Flight Number: DEF456
-Ticket Code: CUP895
-Departure Point: BambooAirWay
-Destination Point: HaNoi
-Departure Date: HoChiMinh
-Return Date: 2023-02-10 09:45
-Seat Class: 2023-02-15 18:15
-Ticket Price: B
----------------------
----------------------
-Flight Number: DEF456
-Ticket Code: JYG172
-Departure Point: BambooAirWay
-Destination Point: HaNoi
-Departure Date: HoChiMinh
-Return Date: 2023-02-10 09:45
-Seat Class: 2023-02-15 18:15
-Ticket Price: A
----------------------
----------------------
-Flight Number: ABC123
-Ticket Code: RFG761
-Departure Point: VietJettAir
-Destination Point: CaMau
-Departure Date: Vinh
-Return Date: 2023-01-15 08:00
-Seat Class: 2023-01-20 19:30
-Ticket Price: A
----------------------
----------------------
-Flight Number: ABC123
-Ticket Code: SIA758
-Departure Point: VietJettAir
-Destination Point: CaMau
-Departure Date: Vinh
-Return Date: 2023-01-15 08:00
-Seat Class: 2023-01-20 19:30
-Ticket Price: A
----------------------
----------------------
-Flight Number: DEF456
-Ticket Code: ORA902
-Departure Point: BambooAirWay
-Destination Point: HaNoi
-Departure Date: HoChiMinh
-Return Date: 2023-02-10 09:45
-Seat Class: 2023-02-15 18:15
-Ticket Price: B
----------------------
----------------------
-Flight Number: DEF456
-Ticket Code: LPK310
-Departure Point: BambooAirWay
-Destination Point: HaNoi
-Departure Date: HoChiMinh
-Return Date: 2023-02-10 09:45
-Seat Class: 2023-02-15 18:15
-Ticket Price: B
----------------------
----------------------
-Flight Number: ABC123
-Ticket Code: ELP895
-Departure Point: VietJettAir
-Destination Point: CaMau
-Departure Date: Vinh
-Return Date: 2023-01-15 08:00
-Seat Class: 2023-01-20 19:30
-Ticket Price: A
+Ticket Code: JXH047
+Company:BambooAirWay
+Departure Point: HaNoi
+Destination Point: HoChiMinh
+Departure Date: 2023-02-10 09:45
+Return Date: 2023-02-15 18:15
+Seat Class: A
+Ticket Price: 350.000VND
+Payment: NOT_PAID
 ---------------------

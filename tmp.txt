@@ -1,4 +1,5 @@
 Tasks left:
 
 1. Log all in server terminal (easy for last)
-2. Notification
+2. Notification ok (left: modify sche, delay)
+3. Handle exception on client site

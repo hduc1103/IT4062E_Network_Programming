@@ -35,7 +35,7 @@ void save_all_tickets_to_file(const string &ticket_data)
 
         size_t start = 0, end;
         file << "---------------------" << endl;
-        const char *titles[] = {"Flight Number: ", "Ticket Code: ", "Departure Point: ", "Destination Point: ", "Departure Date: ", "Return Date: ", "Seat Class: ", "Ticket Price: "};
+        const char *titles[] = {"Flight Number: ", "Ticket Code: ", "Company:", "Departure Point: ", "Destination Point: ", "Departure Date: ", "Return Date: ", "Seat Class: ", "Ticket Price: ", "Payment: "};
         int field_index = 0;
         while ((end = ticket_info.find(',', start)) != string::npos)
         {
@@ -43,6 +43,13 @@ void save_all_tickets_to_file(const string &ticket_data)
             file << titles[field_index++] << field << endl; // Writes each field with a title
             start = end + 1;
         }
+
+        // Write the payment information, which is the last field in the ticket_info
+        if(field_index < 10) { // Check to avoid out of bounds access in titles
+            string lastField = ticket_info.substr(start);
+            file << titles[field_index] << lastField << endl;
+        }
+
         file << "---------------------" << endl;
 
         pos = next_pos + 1;
@@ -51,6 +58,7 @@ void save_all_tickets_to_file(const string &ticket_data)
     file.close();
     cout << "Ticket information saved to Ticket/All_tickets.txt" << endl;
 }
+
 
 void save_tickets_to_file(const string &ticket_data, string ticket_code)
 {
@@ -65,7 +73,7 @@ void save_tickets_to_file(const string &ticket_data, string ticket_code)
     }
 
     file << "---------------------" << endl;
-    const char *titles[] = {"Flight Number: ", "Ticket Code: ", "Departure Point: ", "Destination Point: ", "Departure Date: ", "Return Date: ", "Seat Class: ", "Ticket Price: "};
+    const char *titles[] = {"Flight Number: ", "Ticket Code: ", "Company:", "Departure Point: ", "Destination Point: ", "Departure Date: ", "Return Date: ", "Seat Class: ", "Ticket Price: ", "Paymemt: "};
     size_t start = 0, end;
     int field_index = 0;
     while ((end = ticket_data.find(',', start)) != string::npos)
@@ -74,7 +82,7 @@ void save_tickets_to_file(const string &ticket_data, string ticket_code)
         file << titles[field_index++] << field << endl; // Writes each field with a title
         start = end + 1;
     }
-    if (field_index < 8) {
+    if (field_index < 10) {
         file << titles[field_index] << ticket_data.substr(start) << endl;
     }
 
