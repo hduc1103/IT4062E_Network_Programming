@@ -1,9 +1,8 @@
 #include "client.h"
 
-std::string tmp_noti = "Notification: ";
-
 int main()
 {
+    std::string tmp_noti;
     const char *host = "127.0.0.1"; // Default for local test
     struct sockaddr_in server_addr;
     int client_socket;
@@ -16,7 +15,7 @@ int main()
         {
             throw runtime_error("Error creating client socket");
         }
-        
+
         server_addr.sin_family = AF_INET;
         server_addr.sin_port = htons(SERV_PORT);
         if (inet_pton(AF_INET, host, &(server_addr.sin_addr)) <= 0)
@@ -29,12 +28,11 @@ int main()
         {
             throw runtime_error("Error connecting to the server");
         }
-        
+
         char buffer[BUFFER_SIZE];
 
         while (true)
         {
-
             print_main_menu();
             string choice;
             getline(cin, choice);
@@ -44,14 +42,14 @@ int main()
                 send(client_socket, lower_choice.c_str(), choice.length(), 0);
                 break;
             }
-            else if (lower_choice == "login")
+            else if (lower_choice == "log in")
             {
                 string username, password;
                 cout << "Enter username: ";
                 getline(cin, username);
                 cout << "Enter password: ";
                 getline(cin, password);
-                string msg = "login " + username + "," + password;
+                string msg = "login/" + username + "/" + password;
                 send(client_socket, msg.c_str(), msg.length(), 0);
             }
             else if (lower_choice == "register")
@@ -61,7 +59,7 @@ int main()
                 getline(cin, username);
                 cout << "Enter new password: ";
                 getline(cin, password);
-                string msg = "register " + username + "," + password;
+                string msg = "register/" + username + "/" + password;
                 send(client_socket, msg.c_str(), msg.length(), 0);
             }
             else
@@ -85,95 +83,110 @@ int main()
                 cout << "You're currently online!" << endl;
                 cur_role = Role::user;
                 while (true)
-                {   // std::lock_guard<std::mutex> lock(mapMutex);
-                        std::cout << tmp_noti << std::endl;
-                    
+                {
+                    if (tmp_noti.length() != 0)
+                    {
+                        cout << "Notification: \n";
+                        cout << tmp_noti;
+                        tmp_noti = "";
+                    }
                     print_functions();
+
                     string choice1;
                     getline(cin, choice1);
                     string lower_choice1 = trim(lower(choice1));
-                    if (lower_choice1 == " exit")
+                    if (lower_choice1 == "exit")
                     {
                         send(client_socket, lower_choice.c_str(), choice.length(), 0);
                         break;
                     }
-                    else if (lower_choice1 == "search")
-                    {
-                        string company, destination_point, departure_point, departure_date, return_date;
-                        cout << "Choose criteria to search:" << endl;
-                        cout << "Enter company (or leave blank for any): ";
-                        getline(cin, company);
+                   else if (lower_choice1 == "search")
+{
+    string company, destination_point, departure_point, departure_date, return_date;
+    string search_msg;
+    while(1){
+        int choice2;
+        print_menu_search();
+        cin >> choice2;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+        if (choice2 == 1)
+        {
+            cout << "Enter departure point: ";
+            getline(cin, departure_point);
+            cout << "Enter destination point: ";
+            getline(cin, destination_point);
+            search_msg += "search1/" + departure_point + "/" + destination_point;
+            break;
+        }
+        else if (choice2 == 2)
+        {
+            cout << "Enter company : ";
+            getline(cin, company);
 
-                        cout << "Enter departure point (or leave blank for any): ";
-                        getline(cin, departure_point);
+            cout << "Enter departure point : ";
+            getline(cin, departure_point);
 
-                        cout << "Enter destination point (or leave blank for any): ";
-                        getline(cin, destination_point);
+            cout << "Enter destination point : ";
+            getline(cin, destination_point);
+            search_msg += "search3/" + company + "/" + departure_point + "/" + destination_point;
+            break;
+        }
+        else if (choice2 == 3)
+        {
+            cout << "Enter departure point : ";
+            getline(cin, departure_point);
 
-                        cout << "Enter departure date (or leave blank for any, format YYYY-MM-DD): ";
-                        getline(cin, departure_date);
+            cout << "Enter destination point : ";
+            getline(cin, destination_point);
 
-                        cout << "Enter return date (or leave blank for any, format YYYY-MM-DD): ";
-                        getline(cin, return_date);
+            cout << "Enter departure date (or leave blank for any, format YYYY-MM-DD): ";
+            getline(cin, departure_date);
+            search_msg += "search2/" + departure_point + "/" + destination_point + "/" + departure_date;
+            break;
+        }
+        else if (choice2 == 4)
+        {
+            cout << "Enter departure point : ";
+            getline(cin, departure_point);
 
-                        string search_msg;
-                        if (!departure_point.empty() && !destination_point.empty() && company.empty() && departure_date.empty() && return_date.empty())
-                        {
-                            search_msg += "search1 " + departure_point + "," + destination_point;
-                        }
-                        else if (!departure_point.empty() && !destination_point.empty() && !departure_date.empty() && company.empty() && return_date.empty())
-                        {
-                            search_msg += "search2 " + departure_point + "," + destination_point + "," + departure_date;
-                        }
-                        else if (!company.empty() && !departure_point.empty() && !destination_point.empty() && departure_date.empty() && return_date.empty())
-                        {
-                            search_msg += "search3 " + company + "," + departure_point + "," + destination_point;
-                        }
+            cout << "Enter destination point : ";
+            getline(cin, destination_point);
 
-                        else if (!departure_point.empty() && !destination_point.empty() && !departure_date.empty() && !return_date.empty() && company.empty())
-                        {
-                            search_msg += "search4 " + departure_point + "," + destination_point + "," + departure_date + "," + return_date;
-                        }
-                        else if (!company.empty() && !departure_point.empty() && !destination_point.empty() && !departure_date.empty() && !return_date.empty())
-                        {
-                            search_msg += "search5 " + company + "," + departure_point + "," + destination_point + "," + departure_date + "," + return_date;
-                        }
-                        send(client_socket, search_msg.c_str(), search_msg.length(), 0);
-                        memset(buffer, 0, BUFFER_SIZE);
-                        int bytes_received1 = recv(client_socket, buffer, BUFFER_SIZE, 0);
-                        if (bytes_received1 <= 0)
-                        {
-                            break;
-                        }
-                        buffer[bytes_received1] = '\0';
+            cout << "Enter departure date (or leave blank for any, format YYYY-MM-DD): ";
+            getline(cin, departure_date);
 
-                        string response1 = string(buffer);
-                        if (response1.find("Y_found/") == 0)
-                        {
-                            string flight_data = response1.substr(8);
-                            std::cout << "Flight data:" << endl;
-                            size_t pos = 0;
-                            while (true)
-                            {
-                                size_t next_pos = flight_data.find(';', pos);
-                                if (next_pos == string::npos)
-                                {
-                                    break;
-                                }
-                                string flight_info = flight_data.substr(pos, next_pos - pos);
-                                std::cout << flight_info << endl;
-                                pos = next_pos + 1;
-                            }
-                        }
-                        else if (response1 == "N_found")
-                        {
-                            std::cout << "Can't find the flight!\n";
-                        }
-                        else if (response1 == "N_search")
-                        {
-                            std::cout << "Input 2->6 elements for continuing searching" << endl;
-                        }
-                    }
+            cout << "Enter return date (or leave blank for any, format YYYY-MM-DD): ";
+            getline(cin, return_date);
+            search_msg += "search4/" + departure_point + "/" + destination_point + "/" + departure_date + "/" + return_date;
+            break;
+        }
+        else if (choice2 == 5)
+        {
+            cout << "Enter company : ";
+            getline(cin, company);
+
+            cout << "Enter departure point : ";
+            getline(cin, departure_point);
+
+            cout << "Enter destination point : ";
+            getline(cin, destination_point);
+
+            cout << "Enter departure date (or leave blank for any, format YYYY-MM-DD): ";
+            getline(cin, departure_date);
+
+            cout << "Enter return date (or leave blank for any, format YYYY-MM-DD): ";
+            getline(cin, return_date);
+            search_msg += "search5/" + company + "/" + departure_point + "/" + destination_point + "/" + departure_date + "/" + return_date;
+            break;
+        }
+        else
+        {
+            std::cout << "Invalid choice!\n";
+            
+        }
+    }
+    send(client_socket, search_msg.c_str(), search_msg.length(), 0);
+}
                     else if (lower_choice1 == "book")
                     {
                         string flight_num, seat_class;
@@ -181,110 +194,20 @@ int main()
                         getline(cin, flight_num);
                         cout << "Enter your desired seat class: ";
                         getline(cin, seat_class);
-                        string book_msg = "book " + flight_num + "," + seat_class;
+                        string book_msg = "book/" + flight_num + "/" + seat_class;
                         send(client_socket, book_msg.c_str(), book_msg.length(), 0);
-                        memset(buffer, 0, BUFFER_SIZE);
-                        int bytes_received1 = recv(client_socket, buffer, BUFFER_SIZE, 0);
-                        if (bytes_received1 <= 0)
-                        {
-                            break;
-                        }
-                        buffer[bytes_received1] = '\0';
-
-                        string response1 = string(buffer);
-                        if (response1.find("Y_book/") == 0)
-                        {
-                            string ticket_code = response1.substr(7, 6);
-                            string ticket_price1 = response1.substr(13, 3);
-                            string ticket_price2 = response1.substr(16, 6);
-                            std::cout << "You've booked successfully\n";
-                            std::cout << "Your ticket code: " << ticket_code << endl;
-                            std::cout << "You will have to pay " << ticket_price1 << "." << ticket_price2 << endl;
-                        }
-                        else if (response1 == "N_book")
-                        {
-                            std::cout << "Can't find your flight number" << endl;
-                        }
-                        else if (response1 == "N_book_miss")
-                        {
-                            std::cout << "Input flight number and seatclass for continue booking" << endl;
-                        }
-                        else if (response1.find("N_no_seats/") == 0)
-                        {
-                            std::cout << "No seat class " << response1.substr(11) << " available" << endl;
-                        }
-                        else if (response1 == "N_invalid_class")
-                        {
-                            std::cout << "Invalid seat class\n";
-                        }
-                        else if (response1 == "N_flight_not_found")
-                        {
-                            std::cout << "Can't find you flight number";
-                        }
                     }
                     else if (lower_choice1 == "view")
                     {
                         send(client_socket, "view", strlen("view"), 0);
-                        memset(buffer, 0, BUFFER_SIZE);
-                        int bytes_received1 = recv(client_socket, buffer, BUFFER_SIZE, 0);
-                        if (bytes_received1 <= 0)
-                        {
-                            break;
-                        }
-                        buffer[bytes_received1] = '\0';
-
-                        string response1 = string(buffer);
-                        // std::cout << "DEBUG: Received response: '" << buffer << "'" << std::endl;
-                        if (response1.find("Y_view/") == 0)
-                        {
-
-                            string ticket_data = response1.substr(7);
-                            std::cout << "Tickets information:" << endl;
-                            size_t pos = 0;
-                            while (true)
-                            {
-                                size_t next_pos = ticket_data.find(';', pos);
-                                if (next_pos == string::npos)
-                                {
-                                    break;
-                                }
-                                string ticket_info = ticket_data.substr(pos, next_pos - pos);
-                                std::cout << ticket_info << endl;
-                                pos = next_pos + 1;
-                            }
-                        }
                     }
                     else if (lower_choice1 == "cancel")
                     {
                         string ticket_code;
                         cout << "Enter the ticket code for cancelling: ";
                         getline(cin, ticket_code);
-                        string cancel_msg = "cancel " + ticket_code;
+                        string cancel_msg = "cancel/" + ticket_code;
                         send(client_socket, cancel_msg.c_str(), cancel_msg.length(), 0);
-                        memset(buffer, 0, BUFFER_SIZE);
-                        int bytes_received1 = recv(client_socket, buffer, BUFFER_SIZE, 0);
-                        if (bytes_received1 <= 0)
-                        {
-                            break;
-                        }
-                        buffer[bytes_received1] = '\0';
-
-                        string response1 = string(buffer);
-
-                        if (response1.find("Y_cancel/") == 0)
-                        {
-
-                            string ticket_code = response1.substr(9);
-                            std::cout << "You've cancelled ticket: " << ticket_code << endl;
-                        }
-                        else if (response1 == "N_cancel_miss")
-                        {
-                            std::cout << "Input your ticket code for cancelling";
-                        }
-                        else if (response1 == "N_cancel_err" || response1 == "N_cancel_notfound")
-                        {
-                            std::cout << "Can't find your ticket" << endl;
-                        }
                     }
                     else if (lower_choice1 == "print")
                     {
@@ -293,48 +216,13 @@ int main()
                         getline(cin, choice2);
                         if (choice2 == "all")
                         {
-                            string print_msg = "print all";
+                            string print_msg = "print/all";
                             send(client_socket, print_msg.c_str(), print_msg.length(), 0);
-                            memset(buffer, 0, BUFFER_SIZE);
-                            int bytes_received1 = recv(client_socket, buffer, BUFFER_SIZE, 0);
-                            if (bytes_received1 <= 0)
-                            {
-                                break;
-                            }
-                            buffer[bytes_received1] = '\0';
-
-                            string response1 = string(buffer);
-                            if (response1.find("Y_print/") == 0)
-                            {
-
-                                string ticket_data = response1.substr(8);
-                                cout << "Saved to tickets.txt" << endl;
-                                save_all_tickets_to_file(ticket_data);
-                            }
                         }
                         else
                         {
-                            string print_msg = "print " + choice2;
+                            string print_msg = "print/" + choice2;
                             send(client_socket, print_msg.c_str(), print_msg.length(), 0);
-                            memset(buffer, 0, BUFFER_SIZE);
-                            int bytes_received1 = recv(client_socket, buffer, BUFFER_SIZE, 0);
-                            if (bytes_received1 <= 0)
-                            {
-                                break;
-                            }
-                            buffer[bytes_received1] = '\0';
-
-                            string response1 = string(buffer);
-                            if (response1.find("Y_print_cer/") == 0)
-                            {
-                                string ticket_data = response1.substr(12);
-                                std::cout << "Saved information about ticket " << response1.substr(19, 6) << " to " << response1.substr(19, 6) << ".txt\n";
-                                save_tickets_to_file(ticket_data, response1.substr(19, 6));
-                            }
-                            else if (response1 == "N_print_cer")
-                            {
-                                std::cout << "Can't find your ticket to print\n";
-                            }
                         }
                     }
                     else if (lower_choice1 == "pay")
@@ -342,25 +230,8 @@ int main()
                         string ticket_code;
                         cout << "Enter the ticket code you want to pay: ";
                         getline(cin, ticket_code);
-                        string pay_msg = "pay " + ticket_code;
+                        string pay_msg = "pay/" + ticket_code;
                         send(client_socket, pay_msg.c_str(), pay_msg.length(), 0);
-                        memset(buffer, 0, BUFFER_SIZE);
-                        int bytes_received1 = recv(client_socket, buffer, BUFFER_SIZE, 0);
-                        if (bytes_received1 <= 0)
-                        {
-                            break;
-                        }
-                        buffer[bytes_received1] = '\0';
-
-                        string response1 = string(buffer);
-                        if (response1 == "N_pay")
-                        {
-                            std::cout << "Can't find your ticket code\n";
-                        }
-                        else if (response1.find("Y_pay/") == 0)
-                        {
-                            std::cout << "You've paid " << response1.substr(6, 3) << "." << response1.substr(9, 3) << " VND for ticket " << response1.substr(12, 6) << endl;
-                        }
                     }
                     else if (lower_choice1 == "change")
                     {
@@ -371,43 +242,12 @@ int main()
                         getline(cin, new_flight_num);
                         cout << "Enter the new seat class: ";
                         getline(cin, new_seat_class);
-                        string change_msg = "change " + ticket_code + "," + new_flight_num + "," + new_seat_class;
+                        string change_msg = "change/" + ticket_code + "/" + new_flight_num + "/" + new_seat_class;
                         send(client_socket, change_msg.c_str(), change_msg.length(), 0);
-                        memset(buffer, 0, BUFFER_SIZE);
-                        int bytes_received1 = recv(client_socket, buffer, BUFFER_SIZE, 0);
-                        if (bytes_received1 <= 0)
-                        {
-                            break;
-                        }
-                        buffer[bytes_received1] = '\0';
-
-                        string response1 = string(buffer);
-                        if (response1.find("Y_change/") == 0)
-                        {
-                            std::cout << "Cancelled ticket " << response1.substr(9, 6) << endl;
-                            std::cout << "Your new ticket code is " << response1.substr(15, 6) << endl;
-                            std::cout << "You will have to pay: " << response1.substr(21, 3) << "." << response1.substr(24, 6) << endl;
-                        }
-                        else if (response1 == "N_change")
-                        {
-                            std::cout << "Please check the format\n";
-                        }
-                        else if (response1.find("N_no_seats/") == 0)
-                        {
-                            std::cout << "No seat class " << response1.substr(11) << " available" << endl;
-                        }
-                        else if (response1 == "N_invalid_class")
-                        {
-                            std::cout << "Invalid seat class\n";
-                        }
-                        else if (response1 == "N_flight_not_found")
-                        {
-                            std::cout << "Can't find you flight number";
-                        }
                     }
-                    else if (lower_choice1 == "logout")
+                    else if (lower_choice1 == "log out")
                     {
-                        send(client_socket, lower_choice1.c_str(), lower_choice1.length(), 0);
+                        send(client_socket, "logout", strlen("logout"), 0);
                         memset(buffer, 0, BUFFER_SIZE);
                         int bytes_received1 = recv(client_socket, buffer, BUFFER_SIZE, 0);
                         if (bytes_received1 <= 0)
@@ -429,6 +269,165 @@ int main()
                         std::cout << "Invalid choice\n";
                         continue;
                     }
+                    memset(buffer, 0, BUFFER_SIZE);
+                    int bytes_received1 = recv(client_socket, buffer, BUFFER_SIZE, 0);
+                    if (bytes_received1 <= 0)
+                    {
+                        break;
+                    }
+                    buffer[bytes_received1] = '\0';
+
+                    string response1 = string(buffer);
+
+                    if (response1.find("Y_notif_cancelled") != std::string::npos)
+                    {
+                        size_t pos = response1.find("Y_notif_cancelled");
+                        tmp_noti += "Your flight " + response1.substr(pos + 17, 6) + " has been cancelled\n";
+                    }
+
+                    if (response1.find("Y_modified1") != std::string::npos)
+                    {
+                        size_t startPos = 0;
+                        while ((startPos = response1.find("Y_modified1", startPos)) != std::string::npos)
+                        {
+                            size_t endPos = response1.find('&', startPos);
+                            if (endPos != std::string::npos)
+                            {
+                                tmp_noti += response1.substr(startPos + 11, endPos - (startPos + 13)) + "\n";
+                                startPos = endPos + 1;
+                            }
+                        }
+                    }
+
+                    if (response1.find("Y_modified2") != std::string::npos)
+                    {
+                        size_t startPos = 0;
+                        while ((startPos = response1.find("Y_modified2", startPos)) != std::string::npos)
+                        {
+                            size_t endPos = response1.find('&', startPos);
+                            if (endPos != std::string::npos)
+                            {
+                                tmp_noti += response1.substr(startPos + 11, endPos - (startPos + 13)) + "\n";
+                                startPos = endPos + 1;
+                            }
+                        }
+                    }
+                    if (response1.find("Y_modified3") != std::string::npos)
+                    {
+                        size_t startPos = 0;
+                        while ((startPos = response1.find("Y_modified3", startPos)) != std::string::npos)
+                        {
+                            size_t endPos = response1.find('&', startPos);
+                            if (endPos != std::string::npos)
+                            {
+                                tmp_noti += response1.substr(startPos + 11, endPos - (startPos + 13)) + "\n";
+                                startPos = endPos + 1;
+                            }
+                        }
+                    }
+                    if (response1.find("Y_found/") == 0)
+                    {
+                        string flight_data = response1.substr(8);
+                        std::cout << "Flight data:" << endl;
+                        display_search(flight_data);
+                    }
+                    else if (response1 == "N_found")
+                    {
+                        std::cout << "Can't find the flight!\n";
+                    }
+                    else if (response1 == "N_search")
+                    {
+                        std::cout << "Input 2->6 elements for continuing searching" << endl;
+                    }
+                    else if (response1.find("Y_book/") == 0)
+                    {
+                        string ticket_code = response1.substr(7, 6);
+                        string ticket_price1 = response1.substr(13, 3);
+                        string ticket_price2 = response1.substr(16, 6);
+                        std::cout << "You've booked successfully\n";
+                        std::cout << "Your ticket code: " << ticket_code << endl;
+                        std::cout << "You will have to pay " << ticket_price1 << "." << ticket_price2 << endl;
+                    }
+                    else if (response1 == "N_book")
+                    {
+                        std::cout << "Can't find your flight number" << endl;
+                    }
+                    else if (response1 == "N_book_miss")
+                    {
+                        std::cout << "Input flight number and seatclass for continue booking" << endl;
+                    }
+                    else if (response1.find("N_no_seats/") == 0)
+                    {
+                        std::cout << "No seat class " << response1.substr(11, 1) << " available" << endl;
+                    }
+                    else if (response1 == "N_invalid_class")
+                    {
+                        std::cout << "Invalid seat class\n";
+                    }
+                    else if (response1.find("Y_view/") == 0)
+                    {
+
+                        string ticket_data = response1.substr(7);
+                        std::cout << "Tickets information:" << endl;
+                        display_ticket_information(ticket_data);
+                    }
+                    else if (response1.find("Y_cancel/") == 0)
+                    {
+
+                        string ticket_code = response1.substr(9);
+                        std::cout << "You've cancelled ticket: " << ticket_code << endl;
+                    }
+                    else if (response1 == "N_cancel_miss")
+                    {
+                        std::cout << "Input your ticket code for cancelling";
+                    }
+                    else if (response1 == "N_cancel_err" || response1 == "N_cancel_notfound")
+                    {
+                        std::cout << "Can't find your ticket" << endl;
+                    }
+                    else if (response1.find("Y_print/") == 0)
+                    {
+
+                        string ticket_data = response1.substr(8);
+                        cout << "Saved to tickets.txt" << endl;
+                        save_all_tickets_to_file(ticket_data);
+                    }
+                    else if (response1.find("Y_print_cer/") == 0)
+                    {
+                        string ticket_data = response1.substr(12);
+                        std::cout << "Saved information about ticket " << response1.substr(19, 6) << " to " << response1.substr(19, 6) << ".txt\n";
+                        save_tickets_to_file(ticket_data, response1.substr(19, 6));
+                    }
+                    else if (response1 == "N_print_cer")
+                    {
+                        std::cout << "Can't find your ticket to print\n";
+                    }
+                    else if (response1 == "N_pay")
+                    {
+                        std::cout << "Can't find your ticket code\n";
+                    }
+                    else if (response1.find("Y_pay/") == 0)
+                    {
+                        std::cout << "You've paid " << response1.substr(6, 3) << "." << response1.substr(9, 3) << " VND for ticket " << response1.substr(12, 6) << endl;
+                    }
+                    if (response1.find("Y_change/") == 0)
+                    {
+                        std::cout << "Cancelled ticket " << response1.substr(9, 6) << endl;
+                        std::cout << "Your new ticket code is " << response1.substr(15, 6) << endl;
+                        std::cout << "You will have to pay: " << response1.substr(21, 3) << "." << response1.substr(24, 6) << endl;
+                    }
+                    else if (response1 == "N_change")
+                    {
+                        std::cout << "Please check the format\n";
+                    }
+                    else if (response1 == "N_invalid_class")
+                    {
+                        std::cout << "Invalid seat class\n";
+                    }
+                    else if (response1 == "N_flight_not_found")
+                    {
+                        std::cout << "Can't find your flight number";
+                    }
                 }
             }
             else if (response == "N_login")
@@ -446,9 +445,6 @@ int main()
             else if (response == "N_register")
             {
                 std::cout << "Your username has already existed!" << endl;
-            }else if(response.find("Y_notif_cancelled")==0){
-                tmp_noti += "Your flight " + response.substr(17, 6) + " has been cancelled\n";
-                send(client_socket, "y_noti", strlen("y_noti"), 0);
             }
             else if (response == "Y_admin")
             {
@@ -493,7 +489,7 @@ int main()
 
                         std::cout << "Enter the return date: ";
                         getline(cin, return_date);
-                        string add_msg = "add_flight " + company + "," + flight_num + "," + seat_class_A + "," + seat_class_B + "," + seat_class_A_price + "," + seat_class_B_price + "," + departure_point + "," + destination_point + "," + departure_date + "," + return_date;
+                        string add_msg = "add_flight/" + company + "/" + flight_num + "/" + seat_class_A + "/" + seat_class_B + "/" + seat_class_A_price + "/" + seat_class_B_price + "/" + departure_point + "/" + destination_point + "/" + departure_date + "/" + return_date;
                         send(client_socket, add_msg.c_str(), add_msg.length(), 0);
                         memset(buffer, 0, BUFFER_SIZE);
                         int bytes_received2 = recv(client_socket, buffer, BUFFER_SIZE, 0);
@@ -519,7 +515,7 @@ int main()
                         string del_flight_num;
                         std::cout << "Enter the flight number which you want to delete: ";
                         getline(cin, del_flight_num);
-                        string ad_del_msg = "del_flight " + del_flight_num;
+                        string ad_del_msg = "del_flight/" + del_flight_num;
                         send(client_socket, ad_del_msg.c_str(), ad_del_msg.length(), 0);
                         memset(buffer, 0, BUFFER_SIZE);
                         int bytes_received2 = recv(client_socket, buffer, BUFFER_SIZE, 0);
@@ -535,9 +531,8 @@ int main()
                         {
                             std::cout << "The flight_num does not exist\n";
                         }
-                        else if (response2 == "Y_del")
+                        else if (response2.find("Y_del") == 0)
                         {
-
                             std::cout << "Deleted \n";
                         }
                     }
@@ -554,15 +549,15 @@ int main()
                         getline(cin, modify_return_date);
                         if (!modify_departure_date.empty() && !modify_return_date.empty())
                         {
-                            modify_msg += "modify3 " + modify_flight_num + "," + modify_departure_date + "," + modify_return_date;
+                            modify_msg += "modify3/" + modify_flight_num + "/" + modify_departure_date + "/" + modify_return_date;
                         }
                         if (!modify_departure_date.empty() && modify_return_date.empty())
                         {
-                            modify_msg += "modify2 " + modify_flight_num + "," + modify_departure_date;
+                            modify_msg += "modify1/" + modify_flight_num + "/" + modify_departure_date;
                         }
                         if (modify_departure_date.empty() && !modify_return_date.empty())
                         {
-                            modify_msg += "modify1 " + modify_flight_num + "," + modify_return_date;
+                            modify_msg += "modify2/" + modify_flight_num + "/" + modify_return_date;
                         }
                         send(client_socket, modify_msg.c_str(), modify_msg.length(), 0);
                         int bytes_received2 = recv(client_socket, buffer, BUFFER_SIZE, 0);
@@ -582,11 +577,23 @@ int main()
                         {
                             std::cout << "Modified successfully\n";
                         }
-                    }
+                    } else if(lower_choice2 == "view"){
+                        send(client_socket, "view", strlen("view"),0);
+                        int bytes_received2 = recv(client_socket, buffer, BUFFER_SIZE, 0);
+                        if (bytes_received2 <= 0)
+                        {
+                            break;
+                        }
+                        buffer[bytes_received2] = '\0';
 
-                    else if (lower_choice2 == "logout")
-                    {
-                        send(client_socket, lower_choice2.c_str(), lower_choice2.length(), 0);
+                        string response2 = string(buffer);
+                        
+                    }
+                    
+                    else if (lower_choice2 == "log out")
+                    {   
+
+                        send(client_socket, "logout", strlen("logout"), 0);
                         memset(buffer, 0, BUFFER_SIZE);
                         int bytes_received2 = recv(client_socket, buffer, BUFFER_SIZE, 0);
                         if (bytes_received2 <= 0)

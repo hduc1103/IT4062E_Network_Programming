@@ -201,7 +201,7 @@ void print_functions()
 void print_admin_menu()
 {
     std::cout << "__________________________________________________\n";
-    std::cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n5. View all tickets\n5. Logout" << endl;
+    std::cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n5. Logout" << endl;
     std::cout << "__________________________________________________\n";
     std::cout << "Your message: ";
 
