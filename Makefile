@@ -8,4 +8,5 @@ nview:
 	g++ Test_database/viewtable.cpp -o view -lsqlite3
 ndtb:
 	g++ Test_database/dtb.cpp -o dtb -lsqlite3
-
+ntes:
+	g++ test.cpp -o test -lsqlite3

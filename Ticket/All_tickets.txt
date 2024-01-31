@@ -1,24 +1,36 @@
 ---------------------
+Flight Number: DEF456
+Ticket Code: TCKT456
+Company:BambooAirWay
+Departure Point: HaNoi
+Destination Point: HoChiMinh
+Departure Date: 2023-02-10 09:45
+Return Date: 2023-02-15 18:15
+Seat Class: B
+Ticket Price: 250.000 VND
+Payment: NOT_PAID
+---------------------
+---------------------
 Flight Number: ABC123
-Ticket Code: TCKT123
+Ticket Code: PQM836
 Company:VietJettAir
 Departure Point: CaMau
 Destination Point: Vinh
 Departure Date: 2023-01-15 08:00
 Return Date: 2023-01-20 19:30
 Seat Class: A
-Ticket Price: 300.000VND
-Payment: PAID
+Ticket Price: 300.000 VND
+Payment: NOT_PAID
 ---------------------
 ---------------------
-Flight Number: DEF456
-Ticket Code: JXH047
-Company:BambooAirWay
+Flight Number: JQK123
+Ticket Code: VXP700
+Company:Bamboo
 Departure Point: HaNoi
-Destination Point: HoChiMinh
-Departure Date: 2023-02-10 09:45
-Return Date: 2023-02-15 18:15
+Destination Point: HaiPhong
+Departure Date: 2023-12-12 12:11
+Return Date: :11
 Seat Class: A
-Ticket Price: 350.000VND
+Ticket Price: 900.000 VND
 Payment: NOT_PAID
 ---------------------
