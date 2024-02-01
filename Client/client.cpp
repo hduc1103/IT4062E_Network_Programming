@@ -3,7 +3,11 @@
 int main()
 {
     std::string tmp_noti;
-    const char *host = "127.0.0.1"; // Default for local test
+    std::cout<<"Enter IP: ";
+
+    std::string chost;
+    getline(cin, chost);
+    const char* host = chost.c_str();
     struct sockaddr_in server_addr;
     int client_socket;
     Role cur_role = Role::none;
@@ -293,7 +297,7 @@ int main()
                             size_t endPos = response1.find('&', startPos);
                             if (endPos != std::string::npos)
                             {
-                                tmp_noti += response1.substr(startPos + 11, endPos - (startPos + 13)) + "\n";
+                                tmp_noti += response1.substr(startPos + 11, endPos - (startPos + 12)) + "\n";
                                 startPos = endPos + 1;
                             }
                         }
@@ -307,7 +311,7 @@ int main()
                             size_t endPos = response1.find('&', startPos);
                             if (endPos != std::string::npos)
                             {
-                                tmp_noti += response1.substr(startPos + 11, endPos - (startPos + 13)) + "\n";
+                                tmp_noti += response1.substr(startPos + 11, endPos - (startPos + 12)) + "\n";
                                 startPos = endPos + 1;
                             }
                         }
@@ -320,7 +324,7 @@ int main()
                             size_t endPos = response1.find('&', startPos);
                             if (endPos != std::string::npos)
                             {
-                                tmp_noti += response1.substr(startPos + 11, endPos - (startPos + 13)) + "\n";
+                                tmp_noti += response1.substr(startPos + 11, endPos - (startPos + 12)) + "\n";
                                 startPos = endPos + 1;
                             }
                         }
@@ -331,11 +335,15 @@ int main()
                         std::cout << "Flight data:" << endl;
                         display_search(flight_data);
                     }
-                    else if (response1 == "N_found")
+                    else if (response1.find("N_found")==0)
                     {
                         std::cout << "Can't find the flight!\n";
                     }
-                    else if (response1 == "N_search")
+                    else if(response1.find("N_found_change")==0)
+                    {
+                        std::cout<<"Can't find your ticket";
+                    }
+                    else if (response1.find("N_search")==0)
                     {
                         std::cout << "Input 2->6 elements for continuing searching" << endl;
                     }
@@ -348,11 +356,11 @@ int main()
                         std::cout << "Your ticket code: " << ticket_code << endl;
                         std::cout << "You will have to pay " << ticket_price1 << "." << ticket_price2 << endl;
                     }
-                    else if (response1 == "N_book")
+                    else if (response1.find("N_book")==0)
                     {
                         std::cout << "Can't find your flight number" << endl;
                     }
-                    else if (response1 == "N_book_miss")
+                    else if (response1.find("N_book_miss")==0)
                     {
                         std::cout << "Input flight number and seatclass for continue booking" << endl;
                     }
@@ -360,7 +368,7 @@ int main()
                     {
                         std::cout << "No seat class " << response1.substr(11, 1) << " available" << endl;
                     }
-                    else if (response1 == "N_invalid_class")
+                    else if (response1.find("N_invalid_class")==0)
                     {
                         std::cout << "Invalid seat class\n";
                     }
@@ -377,11 +385,11 @@ int main()
                         string ticket_code = response1.substr(9);
                         std::cout << "You've cancelled ticket: " << ticket_code << endl;
                     }
-                    else if (response1 == "N_cancel_miss")
+                    else if (response1.find("N_cancel_miss")==0)
                     {
                         std::cout << "Input your ticket code for cancelling";
                     }
-                    else if (response1 == "N_cancel_err" || response1 == "N_cancel_notfound")
+                    else if (response1.find("N_cancel_err")==0 || response1.find("N_cancel_notfound")==0)
                     {
                         std::cout << "Can't find your ticket" << endl;
                     }
@@ -398,11 +406,11 @@ int main()
                         std::cout << "Saved information about ticket " << response1.substr(19, 6) << " to " << response1.substr(19, 6) << ".txt\n";
                         save_tickets_to_file(ticket_data, response1.substr(19, 6));
                     }
-                    else if (response1 == "N_print_cer")
+                    else if (response1.find("N_print_cer")==0)
                     {
                         std::cout << "Can't find your ticket to print\n";
                     }
-                    else if (response1 == "N_pay")
+                    else if (response1.find("N_pay")==0)
                     {
                         std::cout << "Can't find your ticket code\n";
                     }
@@ -416,15 +424,15 @@ int main()
                         std::cout << "Your new ticket code is " << response1.substr(15, 6) << endl;
                         std::cout << "You will have to pay: " << response1.substr(21, 3) << "." << response1.substr(24, 6) << endl;
                     }
-                    else if (response1 == "N_change")
+                    else if (response1.find("N_change")==0)
                     {
                         std::cout << "Please check the format\n";
                     }
-                    else if (response1 == "N_invalid_class")
+                    else if (response1.find("N_invalid_class")==0)
                     {
                         std::cout << "Invalid seat class\n";
                     }
-                    else if (response1 == "N_flight_not_found")
+                    else if (response1.find("N_flight_not_found")==0)
                     {
                         std::cout << "Can't find your flight number";
                     }

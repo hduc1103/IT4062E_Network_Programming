@@ -45,11 +45,10 @@ void save_all_tickets_to_file(const string &ticket_data)
         while ((end = ticket_info.find(',', start)) != string::npos)
         {
             string field = ticket_info.substr(start, end - start);
-            file << titles[field_index++] << field << endl; // Writes each field with a title
+            file << titles[field_index++] << field << endl;
             start = end + 1;
         }
 
-        // Write the payment information, which is the last field in the ticket_info
         if(field_index < 10) { // Check to avoid out of bounds access in titles
             string lastField = ticket_info.substr(start);
             file << titles[field_index] << lastField << endl;
@@ -194,14 +193,14 @@ enum class Role
 void print_functions()
 {
     std::cout << "__________________________________________________\n";
-    std::cout << "1. Search Flights(search <departure_point>,<destination_point>)\n2. Book tickets\n3. View tickets detail\n4. Cancel tickets\n5. Change tickets\n6. Print tickets\n7. Ticket payment\n8. Log out" << endl;
+    std::cout << "1. Search Flights\n2. Book tickets\n3. View tickets detail\n4. Cancel tickets\n5. Change tickets\n6. Print tickets\n7. Ticket payment\n8. Log out" << endl;
     std::cout << "__________________________________________________\n";
     std::cout << "Your message: ";
 }
 void print_admin_menu()
 {
     std::cout << "__________________________________________________\n";
-    std::cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n5. Logout" << endl;
+    std::cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n4. Logout" << endl;
     std::cout << "__________________________________________________\n";
     std::cout << "Your message: ";
 
@@ -212,10 +211,8 @@ void print_main_menu()
     std::cout << "1. Login\n2. Register\n3. Exit\nYour message: ";
 }
 std::string trim(std::string str) {
-    // Find the last character position after which all characters are spaces
     size_t endpos = str.find_last_not_of(" \t");
     
-    // If the string does not contain only spaces
     if (std::string::npos != endpos) {
         str = str.substr(0, endpos + 1);
     }
