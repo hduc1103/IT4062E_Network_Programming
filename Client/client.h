@@ -8,7 +8,7 @@
 #include <fstream>
 #include <atomic>
 #include <thread>
-#include <mutex>    
+#include <mutex>
 using namespace std;
 #include <chrono>
 
@@ -19,7 +19,7 @@ std::mutex mapMutex;
 #define BUFFER_SIZE 2048
 
 void save_all_tickets_to_file(const string &ticket_data)
-{           
+{
     ofstream file("Ticket/All_tickets.txt");
 
     if (!file.is_open())
@@ -49,7 +49,8 @@ void save_all_tickets_to_file(const string &ticket_data)
             start = end + 1;
         }
 
-        if(field_index < 10) { // Check to avoid out of bounds access in titles
+        if (field_index < 10)
+        { // Check to avoid out of bounds access in titles
             string lastField = ticket_info.substr(start);
             file << titles[field_index] << lastField << endl;
         }
@@ -62,7 +63,6 @@ void save_all_tickets_to_file(const string &ticket_data)
     file.close();
     cout << "Ticket information saved to Ticket/All_tickets.txt" << endl;
 }
-
 
 void save_tickets_to_file(const string &ticket_data, string ticket_code)
 {
@@ -86,7 +86,8 @@ void save_tickets_to_file(const string &ticket_data, string ticket_code)
         file << titles[field_index++] << field << endl; // Writes each field with a title
         start = end + 1;
     }
-    if (field_index < 10) {
+    if (field_index < 10)
+    {
         file << titles[field_index] << ticket_data.substr(start) << endl;
     }
 
@@ -122,7 +123,7 @@ void display_ticket_information(const string &ticket_data)
                 break;
             }
             string field = ticket_info.substr(start, end - start);
-            cout << titles[field_index++] << field << endl; 
+            cout << titles[field_index++] << field << endl;
             start = end + 1;
         }
         cout << "---------------------" << endl;
@@ -130,7 +131,8 @@ void display_ticket_information(const string &ticket_data)
         pos = next_pos + 1;
     }
 }
-void display_search(const string &ticket_data){
+void display_search(const string &ticket_data)
+{
     size_t pos = 0;
     while (true)
     {
@@ -164,14 +166,15 @@ void display_search(const string &ticket_data){
     }
 }
 
-void print_menu_search(){
-    std::cout<<"1. Search based on departure point, destination point\n";
-    std::cout<<"2. Search based on company, departure point, destination point\n";
-    std::cout<<"3. Search based on departure point, destination point, departure date\n";
-    std::cout<<"4. Search based on departure point, destination point, departure date, return date\n";
-    std::cout<<"5. Search based on company, departure point, destination point, departure date, return date\n";
-    std::cout<<"6. Exit\n";
-    std::cout<<"Your choice(1-6): ";
+void print_menu_search()
+{
+    std::cout << "1. Search based on departure point, destination point\n";
+    std::cout << "2. Search based on company, departure point, destination point\n";
+    std::cout << "3. Search based on departure point, destination point, departure date\n";
+    std::cout << "4. Search based on departure point, destination point, departure date, return date\n";
+    std::cout << "5. Search based on company, departure point, destination point, departure date, return date\n";
+    std::cout << "6. Exit\n";
+    std::cout << "Your choice(1-6): ";
 }
 string lower(const string &input)
 {
@@ -203,19 +206,19 @@ void print_admin_menu()
     std::cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n4. Logout" << endl;
     std::cout << "__________________________________________________\n";
     std::cout << "Your message: ";
-
 }
 void print_main_menu()
 {
     std::cout << "__________________________________________________\n";
     std::cout << "1. Login\n2. Register\n3. Exit\nYour message: ";
 }
-std::string trim(std::string str) {
+std::string trim(std::string str)
+{
     size_t endpos = str.find_last_not_of(" \t");
-    
-    if (std::string::npos != endpos) {
+
+    if (std::string::npos != endpos)
+    {
         str = str.substr(0, endpos + 1);
     }
     return str;
 }
-

@@ -3,11 +3,11 @@
 int main()
 {
     std::string tmp_noti;
-    std::cout<<"Enter IP: ";
+    std::cout << "Enter IP: ";
 
     std::string chost;
     getline(cin, chost);
-    const char* host = chost.c_str();
+    const char *host = chost.c_str();
     struct sockaddr_in server_addr;
     int client_socket;
     Role cur_role = Role::none;
@@ -104,93 +104,93 @@ int main()
                         send(client_socket, lower_choice.c_str(), choice.length(), 0);
                         break;
                     }
-                   else if (lower_choice1 == "search")
-{
-    string company, destination_point, departure_point, departure_date, return_date;
-    string search_msg;
-    while(1){
-        int choice2;
-        print_menu_search();
-        cin >> choice2;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-        if (choice2 == 1)
-        {
-            cout << "Enter departure point: ";
-            getline(cin, departure_point);
-            cout << "Enter destination point: ";
-            getline(cin, destination_point);
-            search_msg += "search1/" + departure_point + "/" + destination_point;
-            break;
-        }
-        else if (choice2 == 2)
-        {
-            cout << "Enter company : ";
-            getline(cin, company);
+                    else if (lower_choice1 == "search")
+                    {
+                        string company, destination_point, departure_point, departure_date, return_date;
+                        string search_msg;
+                        while (1)
+                        {
+                            int choice2;
+                            print_menu_search();
+                            cin >> choice2;
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            if (choice2 == 1)
+                            {
+                                cout << "Enter departure point: ";
+                                getline(cin, departure_point);
+                                cout << "Enter destination point: ";
+                                getline(cin, destination_point);
+                                search_msg += "search1/" + departure_point + "/" + destination_point;
+                                break;
+                            }
+                            else if (choice2 == 2)
+                            {
+                                cout << "Enter company : ";
+                                getline(cin, company);
 
-            cout << "Enter departure point : ";
-            getline(cin, departure_point);
+                                cout << "Enter departure point : ";
+                                getline(cin, departure_point);
 
-            cout << "Enter destination point : ";
-            getline(cin, destination_point);
-            search_msg += "search3/" + company + "/" + departure_point + "/" + destination_point;
-            break;
-        }
-        else if (choice2 == 3)
-        {
-            cout << "Enter departure point : ";
-            getline(cin, departure_point);
+                                cout << "Enter destination point : ";
+                                getline(cin, destination_point);
+                                search_msg += "search3/" + company + "/" + departure_point + "/" + destination_point;
+                                break;
+                            }
+                            else if (choice2 == 3)
+                            {
+                                cout << "Enter departure point : ";
+                                getline(cin, departure_point);
 
-            cout << "Enter destination point : ";
-            getline(cin, destination_point);
+                                cout << "Enter destination point : ";
+                                getline(cin, destination_point);
 
-            cout << "Enter departure date (or leave blank for any, format YYYY-MM-DD): ";
-            getline(cin, departure_date);
-            search_msg += "search2/" + departure_point + "/" + destination_point + "/" + departure_date;
-            break;
-        }
-        else if (choice2 == 4)
-        {
-            cout << "Enter departure point : ";
-            getline(cin, departure_point);
+                                cout << "Enter departure date (or leave blank for any, format YYYY-MM-DD): ";
+                                getline(cin, departure_date);
+                                search_msg += "search2/" + departure_point + "/" + destination_point + "/" + departure_date;
+                                break;
+                            }
+                            else if (choice2 == 4)
+                            {
+                                cout << "Enter departure point : ";
+                                getline(cin, departure_point);
 
-            cout << "Enter destination point : ";
-            getline(cin, destination_point);
+                                cout << "Enter destination point : ";
+                                getline(cin, destination_point);
 
-            cout << "Enter departure date (or leave blank for any, format YYYY-MM-DD): ";
-            getline(cin, departure_date);
+                                cout << "Enter departure date (or leave blank for any, format YYYY-MM-DD): ";
+                                getline(cin, departure_date);
 
-            cout << "Enter return date (or leave blank for any, format YYYY-MM-DD): ";
-            getline(cin, return_date);
-            search_msg += "search4/" + departure_point + "/" + destination_point + "/" + departure_date + "/" + return_date;
-            break;
-        }
-        else if (choice2 == 5)
-        {
-            cout << "Enter company : ";
-            getline(cin, company);
+                                cout << "Enter return date (or leave blank for any, format YYYY-MM-DD): ";
+                                getline(cin, return_date);
+                                search_msg += "search4/" + departure_point + "/" + destination_point + "/" + departure_date + "/" + return_date;
+                                break;
+                            }
+                            else if (choice2 == 5)
+                            {
+                                cout << "Enter company : ";
+                                getline(cin, company);
 
-            cout << "Enter departure point : ";
-            getline(cin, departure_point);
+                                cout << "Enter departure point : ";
+                                getline(cin, departure_point);
 
-            cout << "Enter destination point : ";
-            getline(cin, destination_point);
+                                cout << "Enter destination point : ";
+                                getline(cin, destination_point);
 
-            cout << "Enter departure date (or leave blank for any, format YYYY-MM-DD): ";
-            getline(cin, departure_date);
+                                cout << "Enter departure date (or leave blank for any, format YYYY-MM-DD): ";
+                                getline(cin, departure_date);
 
-            cout << "Enter return date (or leave blank for any, format YYYY-MM-DD): ";
-            getline(cin, return_date);
-            search_msg += "search5/" + company + "/" + departure_point + "/" + destination_point + "/" + departure_date + "/" + return_date;
-            break;
-        }
-        else
-        {
-            std::cout << "Invalid choice!\n";
-            
-        }
-    }
-    send(client_socket, search_msg.c_str(), search_msg.length(), 0);
-}
+                                cout << "Enter return date (or leave blank for any, format YYYY-MM-DD): ";
+                                getline(cin, return_date);
+                                search_msg += "search5/" + company + "/" + departure_point + "/" + destination_point + "/" + departure_date + "/" + return_date;
+                                break;
+                            }
+                            else
+                            {
+                                std::cout << "Invalid choice!\n";
+                            }
+                        }
+                        send(client_socket, search_msg.c_str(), search_msg.length(), 0);
+                    }
                     else if (lower_choice1 == "book")
                     {
                         string flight_num, seat_class;
@@ -335,15 +335,15 @@ int main()
                         std::cout << "Flight data:" << endl;
                         display_search(flight_data);
                     }
-                    else if (response1.find("N_found")==0)
+                    else if (response1.find("N_found") == 0)
                     {
                         std::cout << "Can't find the flight!\n";
                     }
-                    else if(response1.find("N_found_change")==0)
+                    else if (response1.find("N_found_change") == 0)
                     {
-                        std::cout<<"Can't find your ticket";
+                        std::cout << "Can't find your ticket";
                     }
-                    else if (response1.find("N_search")==0)
+                    else if (response1.find("N_search") == 0)
                     {
                         std::cout << "Input 2->6 elements for continuing searching" << endl;
                     }
@@ -356,11 +356,11 @@ int main()
                         std::cout << "Your ticket code: " << ticket_code << endl;
                         std::cout << "You will have to pay " << ticket_price1 << "." << ticket_price2 << endl;
                     }
-                    else if (response1.find("N_book")==0)
+                    else if (response1.find("N_book") == 0)
                     {
                         std::cout << "Can't find your flight number" << endl;
                     }
-                    else if (response1.find("N_book_miss")==0)
+                    else if (response1.find("N_book_miss") == 0)
                     {
                         std::cout << "Input flight number and seatclass for continue booking" << endl;
                     }
@@ -368,7 +368,7 @@ int main()
                     {
                         std::cout << "No seat class " << response1.substr(11, 1) << " available" << endl;
                     }
-                    else if (response1.find("N_invalid_class")==0)
+                    else if (response1.find("N_invalid_class") == 0)
                     {
                         std::cout << "Invalid seat class\n";
                     }
@@ -385,11 +385,11 @@ int main()
                         string ticket_code = response1.substr(9);
                         std::cout << "You've cancelled ticket: " << ticket_code << endl;
                     }
-                    else if (response1.find("N_cancel_miss")==0)
+                    else if (response1.find("N_cancel_miss") == 0)
                     {
                         std::cout << "Input your ticket code for cancelling";
                     }
-                    else if (response1.find("N_cancel_err")==0 || response1.find("N_cancel_notfound")==0)
+                    else if (response1.find("N_cancel_err") == 0 || response1.find("N_cancel_notfound") == 0)
                     {
                         std::cout << "Can't find your ticket" << endl;
                     }
@@ -406,11 +406,11 @@ int main()
                         std::cout << "Saved information about ticket " << response1.substr(19, 6) << " to " << response1.substr(19, 6) << ".txt\n";
                         save_tickets_to_file(ticket_data, response1.substr(19, 6));
                     }
-                    else if (response1.find("N_print_cer")==0)
+                    else if (response1.find("N_print_cer") == 0)
                     {
                         std::cout << "Can't find your ticket to print\n";
                     }
-                    else if (response1.find("N_pay")==0)
+                    else if (response1.find("N_pay") == 0)
                     {
                         std::cout << "Can't find your ticket code\n";
                     }
@@ -424,15 +424,15 @@ int main()
                         std::cout << "Your new ticket code is " << response1.substr(15, 6) << endl;
                         std::cout << "You will have to pay: " << response1.substr(21, 3) << "." << response1.substr(24, 6) << endl;
                     }
-                    else if (response1.find("N_change")==0)
+                    else if (response1.find("N_change") == 0)
                     {
                         std::cout << "Please check the format\n";
                     }
-                    else if (response1.find("N_invalid_class")==0)
+                    else if (response1.find("N_invalid_class") == 0)
                     {
                         std::cout << "Invalid seat class\n";
                     }
-                    else if (response1.find("N_flight_not_found")==0)
+                    else if (response1.find("N_flight_not_found") == 0)
                     {
                         std::cout << "Can't find your flight number";
                     }
@@ -585,8 +585,10 @@ int main()
                         {
                             std::cout << "Modified successfully\n";
                         }
-                    } else if(lower_choice2 == "view"){
-                        send(client_socket, "view", strlen("view"),0);
+                    }
+                    else if (lower_choice2 == "view")
+                    {
+                        send(client_socket, "view", strlen("view"), 0);
                         int bytes_received2 = recv(client_socket, buffer, BUFFER_SIZE, 0);
                         if (bytes_received2 <= 0)
                         {
@@ -595,11 +597,10 @@ int main()
                         buffer[bytes_received2] = '\0';
 
                         string response2 = string(buffer);
-                        
                     }
-                    
+
                     else if (lower_choice2 == "log out")
-                    {   
+                    {
 
                         send(client_socket, "logout", strlen("logout"), 0);
                         memset(buffer, 0, BUFFER_SIZE);

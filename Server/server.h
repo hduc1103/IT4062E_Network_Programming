@@ -151,7 +151,7 @@ void functions(int client_socket, const User &user);
 void connect_client(int client_socket);
 void admin_mode(int client_socket);
 void book_flight(int client_socket, const string flight_num, const string seat_class, const User &user);
-void cancel_flight(int client_socket, const string ticket_code,const User&user);
+void cancel_flight(int client_socket, const string ticket_code, const User &user);
 void update_seat_count(sqlite3 *db, const string &flight_num, const string &seat_class, int adjustment);
 void handle_payment(int client_socket, const string ticket_code, string payment_status);
 void change_flight(int client_socket, const string ticket_code, const string flight_num_new, const string seat_class_new, const User &user);
