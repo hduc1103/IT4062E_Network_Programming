@@ -100,10 +100,4 @@ The system implements the following functionalities as per teacher requirements:
 - **Operating System**: Linux
 
 ---
-
-## Contributors
-- **[Your Name]** - Developer
-- **[Your Collaborator's Name]** - Contributor
-
----
 ```
